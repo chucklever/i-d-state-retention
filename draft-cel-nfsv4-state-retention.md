@@ -355,6 +355,11 @@ new client ID is confirmed.  The flag is a hint that lets a
 gateway decide whether to run a front-side grace period at all.
 It is not proof that any particular item of state was retained.
 
+The backend bounds how long it retains state with two limits, and
+it advertises both as attributes ({{attrs}}).  A gateway reads
+them once it has a session and uses them to fit its front-side
+grace period inside the time the backend allows for reclaim.
+
 ## Capability Negotiation {#negotiate}
 
 This extension defines two flags in the EXCHANGE_ID flag word,
@@ -434,7 +439,10 @@ convenience and {{RFC9754}} uses one for its OPEN flags.  An
 attribute is read per file system, with a filehandle in hand.
 Retention is a property of a client ID, and a client has to learn
 whether retention is available at EXCHANGE_ID, before the client
-has a session with which to read an attribute.
+has a session with which to read an attribute.  That reasoning
+does not extend to the limits a server places on retention.  A
+client has no use for those until it has a session, and this
+extension does advertise them as attributes ({{attrs}}).
 
 ## Retaining State {#retain}
 
@@ -544,9 +552,63 @@ it when the first conflicting request arrives.  A reclaim that
 finds the state still in place succeeds, and does so safely,
 because nothing that conflicts was granted in the meantime.
 
-Neither limit is advertised to the client.  A client needs to
-know only whether reclaims can succeed, which the EXCHANGE_ID
-reply tells it, and the reply to each reclaim is authoritative.
+A server advertises both limits to its clients, as {{attrs}}
+specifies.  The reply to each reclaim remains the authoritative
+answer to whether an item of state survived.
+
+## Limit Attributes {#attrs}
+
+This extension defines two attributes, through which a server
+reports the absence limit and the reclaim cap.  {{xdr}} gives
+their numbers and types.
+
+| Name                 | Id | Data Type | Acc |
+|:---------------------|---:|:----------|:----|
+| retain_absence_limit | 92 | uint32_t  | R   |
+| retain_reclaim_cap   | 93 | uint32_t  | R   |
+{: #tbl-attrs title="Limit attributes"}
+
+retain_absence_limit:
+: The absence limit, in seconds.
+
+retain_reclaim_cap:
+: The reclaim cap, in seconds.
+
+Both are per-server attributes in the manner of lease_time
+({{Section 5.8.1.11 of RFC8881}}).  A client can read them with
+GETATTR on any filehandle the server provides, and the result
+does not depend on the filehandle.  Neither can be set.
+
+A server that implements this extension MUST support both
+attributes.  A server that does not implement the extension does
+not list them in supported_attrs, which a client can rely on
+only as {{Section 6 of RFC8178}} describes.
+
+To a retaining client, a server reports the limits it applies to
+the client ID under which the request was sent.  A server whose
+policy gives different principals different limits therefore
+reports different values to different clients.  To a client that
+is not a retaining client, a server reports its default limits.
+Those values tell such a client how long retained state can block
+it, and have no other effect on that client.
+
+Each value is the configured limit, not the time remaining in an
+interval.  A client knows when its reclaim interval began, since
+its own CREATE_SESSION began it, and can compute what is left.
+
+A server applies to each client ID the limits that were in effect
+when that client ID was confirmed.  For the state of that client
+ID, the server MUST NOT reach either limit earlier than the value
+it reported.  A change to the server's configuration applies to
+client IDs confirmed after the change.  Administrative release
+({{admin}}), a resource limit ({{resources}}), and a restart of
+the server ({{grace}}) can each end retention sooner, and the
+attributes make no promise against them.
+
+When a client owner restarts repeatedly, the reclaim cap for
+state retained in an earlier round is already running ({{retain}}).
+The value of retain_reclaim_cap applies in full only to state
+retained at the most recent confirmation.
 
 ## Reclaiming Outside the Grace Period {#reclaim}
 
@@ -1001,17 +1063,33 @@ When a gateway starts after a restart, it proceeds in this order:
 1. The gateway sends EXCHANGE_ID with EXCHGID4_FLAG_RETAIN_STATE
    to the backend, then CREATE_SESSION.
 
-2. The gateway begins its front-side grace period and notifies
+2. The gateway reads retain_absence_limit and retain_reclaim_cap
+   from the backend ({{attrs}}).
+
+3. The gateway begins its front-side grace period and notifies
    its front-side clients: SM_NOTIFY to the callers in its NSM
    monitor list, and the ordinary NFSv4 restart indications to its
    NFSv4 clients.
 
-3. The gateway forwards each front-side reclaim to the backend as
+4. The gateway forwards each front-side reclaim to the backend as
    a back-side reclaim and answers the front-side client from the
    backend's reply.
 
-4. When the front-side grace period ends, the gateway sends
+5. When the front-side grace period ends, the gateway sends
    RECLAIM_COMPLETE to the backend.
+
+The reclaim cap runs from the gateway's CREATE_SESSION.  A gateway
+SHOULD choose a front-side grace period that ends, with time left
+to send RECLAIM_COMPLETE, before the reclaim cap elapses.  The
+front side sets a floor on that choice.  NFSv4 front-side clients
+need at least one lease period of the gateway in which to notice
+the restart and reclaim, and NLM clients need time to act on
+SM_NOTIFY.  When the reclaim cap is shorter than that floor, the
+gateway runs the grace period its front side needs, and reclaims
+that arrive after the cap are refused as {{reclaim}} specifies.
+A gateway SHOULD report that condition to its operator when it
+starts, because the condition is a configuration error that the
+operator can correct at the gateway or at the backend.
 
 The gateway decides once, from the EXCHANGE_ID reply, whether
 reclaims can succeed, and then the backend decides each reclaim.
@@ -1238,9 +1316,11 @@ to cover the inner gateway's grace period, which in turn has to
 cover the time the outer gateway takes to restart plus the outer
 gateway's grace period.  Each further gateway in a chain adds its
 own restart time and grace period to what the backend's reclaim
-cap has to cover.  Neither limit is advertised ({{limits}}), so an
-operator has to configure each server in the chain with the
-servers in front of it in mind.  Where the limits do not nest, the
+cap has to cover.  Each gateway can read the limits of the server
+behind it ({{attrs}}).  An inner gateway can therefore report to
+the outer gateway limits that fit inside the ones the backend
+reported to it, and the outer gateway sizes its front-side grace
+period from those.  Where the limits do not nest, the
 reclaims still outstanding when the shorter limit is reached fail,
 and the front-side clients that sent them are told that their
 state is lost.
@@ -1300,10 +1380,11 @@ least one lease period of the gateway, and a cap shorter than
 that causes late front-side reclaims to be refused and their
 clients told that state is lost.  A server SHOULD make the reclaim
 cap configurable, and its default SHOULD be no shorter than the
-server's own lease period.  Because neither limit is advertised
-({{limits}}), an operator who runs a gateway against a server
-sets the gateway's front-side grace period with the server's
-reclaim cap in mind.
+server's own lease period.  A gateway reads the reclaim cap and
+fits its front-side grace period inside it where it can
+({{gateway-reclaim}}), but a gateway cannot shorten that grace
+period below what its front side needs.  The default therefore
+has to suit a gateway that nobody has tuned.
 
 ## Resource Limits {#resources}
 
@@ -1385,9 +1466,9 @@ service.
 
 # XDR Description {#xdr}
 
-This extension adds two constants to the XDR description of
-NFSv4.2 in {{RFC7863}}.  No new data types or operations are
-added, and the XDR of EXCHANGE_ID is unchanged: the new constants
+This extension adds two flag constants and two attributes to the
+XDR description of NFSv4.2 in {{RFC7863}}.  No operations are
+added, and the XDR of EXCHANGE_ID is unchanged: the flag constants
 name bits in the existing eia_flags and eir_flags words.
 
 ~~~
@@ -1400,6 +1481,16 @@ name bits in the existing eia_flags and eir_flags words.
 /// const EXCHGID4_FLAG_RETAIN_STATE        = 0x00000008;
 /// const EXCHGID4_FLAG_RECLAIMABLE_R       = 0x20000000;
 ///
+/// /*
+///  * Attributes defined by this document.  Each value is a
+///  * count of seconds.
+///  */
+/// typedef uint32_t        fattr4_retain_absence_limit;
+/// typedef uint32_t        fattr4_retain_reclaim_cap;
+///
+/// const FATTR4_RETAIN_ABSENCE_LIMIT       = 92;
+/// const FATTR4_RETAIN_RECLAIM_CAP         = 93;
+///
 ~~~
 
 EXCHGID4_FLAG_RETAIN_STATE takes the next unassigned bit after the
@@ -1409,6 +1500,11 @@ EXCHGID4_FLAG_RECLAIMABLE_R takes a bit adjacent to
 EXCHGID4_FLAG_CONFIRMED_R, which it resembles in being set only
 by the server.  {{negotiate}} specifies the use of both.
 
+{{attrs}} specifies the two attributes.  Their numbers are
+provisional.  Other extensions to NFSv4.2 that are in progress
+also assign attribute numbers, and the numbers here will change
+if they collide with an assignment that is published first.
+
 ## Extraction of XDR {#extract}
 
 The XDR description is embedded in this document in a way that
@@ -1416,7 +1512,7 @@ makes it simple for the reader to extract into a ready-to-compile
 form, following the practice of {{RFC7863}} and {{RFC9754}}.  The
 reader can feed this document into the following shell script to
 produce the machine-readable XDR description of the new
-constants:
+constants and types:
 
 ~~~
 #!/bin/sh
@@ -1433,9 +1529,9 @@ sh extract.sh < spec.txt > state_retention_prot.x
 
 The effect of the script is to remove leading blank space from
 each line, plus a sentinel sequence of "///".  The extracted
-constants are written in the XDR language of {{RFC4506}} and
-belong with the EXCHANGE_ID constants in the nfs4_prot.x file
-generated from {{RFC7863}}.
+definitions are written in the XDR language of {{RFC4506}} and
+belong with the EXCHANGE_ID constants and the attribute
+definitions in the nfs4_prot.x file generated from {{RFC7863}}.
 
 
 # Security Considerations {#security}
@@ -1559,7 +1655,11 @@ This document has no IANA actions.
 The two EXCHANGE_ID flag bits that {{xdr}} assigns are not
 managed by an IANA registry.  {{RFC8881}} assigns the existing
 flag bits in its XDR description, and {{RFC7862}} added one in the
-same way.  This document follows that practice.
+same way.  The two attribute numbers that {{xdr}} assigns are not
+managed by an IANA registry either.  {{RFC8881}} and {{RFC7862}}
+assign attribute numbers in their XDR descriptions, and
+{{RFC9754}} added attributes in the same way.  This document
+follows that practice.
 
 
 --- back
@@ -1603,7 +1703,9 @@ After the return, before the absence limit:
 8. G sends CREATE_SESSION.  B destroys the old client ID and its
    sessions, and keeps the old instance's opens and locks as
    retained state.
-9. G starts its front-side grace period and sends SM_NOTIFY to C.
+9. G reads retain_reclaim_cap from B and chooses a front-side
+   grace period that ends before the cap elapses from step 8.  G
+   starts that grace period and sends SM_NOTIFY to C.
 10. C sends NLM_LOCK with the reclaim flag set, for the same owner
     and range, to G.
 11. G sends OPEN with CLAIM_PREVIOUS and open-owner g(C) to B.  B

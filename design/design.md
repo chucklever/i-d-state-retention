@@ -44,7 +44,9 @@ other clients for a gateway that has not come back (the "absence
 limit"), and how long the unreclaimed remainder blocks them once
 a new instance has a session (the "reclaim cap").  Within the
 cap, the new instance's lease renewals keep the remainder in
-place until RECLAIM_COMPLETE.
+place until RECLAIM_COMPLETE.  The backend advertises both
+limits as attributes, so the gateway can fit its front-side
+grace period inside the cap.
 
 The mechanism is not specific to gateways.  Any NFSv4.2 client
 that can reconstruct its lock state after a restart could use it
@@ -159,14 +161,17 @@ same request succeeds without the flag, the flag was the cause.
 Rejected:
 - A new operation.  It would carry more (for example the
   absence limit) but adds an operation number and XDR for
-  information the gateway does not need in advance (D3).
+  two integers that attributes can carry (D3).
 - A new attribute that advertises support.  RFC 8178 Section 6
   offers this as a convenience, and RFC 9754 uses it
   (fattr4_open_arguments) for its OPEN flags.  An attribute is
   read per file system, with a filehandle.  Retention is a
   property of a client ID, and the gateway has to learn of it
   at EXCHANGE_ID, before it has a session.  A reviewer may still
-  ask for one, so the draft should give this reason.
+  ask for one, so the draft should give this reason.  The
+  objection is to learning of support that way.  The limits are
+  wanted only once a session exists, and D3 does advertise them
+  as attributes.
 
 ### D2. What is retained
 
@@ -213,13 +218,58 @@ applies again.
 - **Administrative release** of retained state has the effect of
   a limit followed by immediate release.
 
-Neither limit is advertised.  The gateway needs to know only
-whether reclaims can succeed, which D1 tells it, and each
-reclaim's result is authoritative (D8).  A gateway whose
-front-side grace period runs past the cap may have late reclaims
-refused, and its clients are then told their state is lost.  To
-make that rare, the reclaim cap SHOULD be no shorter than a
-floor expressed in backend lease periods (Section 7, item 5).
+**Both limits are advertised.**  Two new attributes carry them,
+retain_absence_limit and retain_reclaim_cap, each a count of
+seconds and each read-only.  They are per-server attributes in
+the manner of lease_time (RFC 8881 Section 5.8.1.11): a client
+reads them with GETATTR on any filehandle and gets the same
+answer.
+
+- A backend that implements the extension MUST support both.
+  A backend without the extension does not list them in
+  supported_attrs.
+- To a retaining client the backend reports the limits it
+  applies to that client ID.  A backend whose policy differs by
+  principal (D11) reports the values for the requester.  To any
+  other client it reports its defaults, which bind nothing.
+- The values are the configured limits, not the time remaining.
+  The gateway knows when each interval began: its own
+  CREATE_SESSION started the reclaim interval.
+- The backend applies to each client ID the limits in effect
+  when that client ID was confirmed.  It MUST NOT reach a limit
+  earlier than the value it reported for that client ID.  A
+  later change of configuration reaches client IDs confirmed
+  after it.  Administrative release, a resource limit, and a
+  restart of the backend are not limits and are not promised
+  against.
+- After repeated restarts (D10) the cap for state retained in an
+  earlier round is already running.  The attribute is the full
+  cap, so it overstates what is left for that remainder.
+
+What the gateway does with them: after CREATE_SESSION it reads
+both in its first GETATTR, as a client reads lease_time.  It
+SHOULD end its front-side grace period, and send
+RECLAIM_COMPLETE, before the reclaim cap elapses from its
+CREATE_SESSION.  A front-side grace period cannot be shorter
+than the front side needs (one front-side lease period for
+NFSv4 clients), so a cap below that leaves the gateway unable to
+fit.  The gateway then runs the grace period it needs, late
+reclaims are refused as before, and the gateway SHOULD report
+the mismatch to its operator at startup, which it could not
+detect before.  Each reclaim's result stays authoritative (D8).
+
+Why advertise, when the first draft did not: the hint in D1
+tells a gateway whether reclaims can succeed, not for how long.
+Without the cap a gateway sizes its front-side grace period
+blind.  A chain of gateways needs the numbers more: the inner
+gateway's grace period has to cover the outer gateway's, and the
+backend's cap has to cover both.  With the limits readable each
+tier computes that, and an inner gateway reports to the outer
+gateway limits it can keep given what the backend reported to
+it.
+
+The floor stays: the default reclaim cap SHOULD be no shorter
+than one backend lease period (Section 7, item 5).
 
 Why the cap is mandatory: without it, a faulty gateway that
 returns, renews its lease, and never sends RECLAIM_COMPLETE
@@ -239,9 +289,20 @@ state intact.  For a retaining client the absence limit acts as
 a longer lease.
 
 Rejected:
-- A single retention window advertised as an attribute.  It
-  forces the gateway to fit its front-side grace into a number
-  chosen by the backend.
+- A single retention window advertised as an attribute.  The
+  two intervals bound different failures, a gateway that is
+  gone and a gateway that is back but not finished, and an
+  operator wants to set them apart.
+- Unadvertised limits.  The first version of this document chose
+  that, on the argument that the reclaimable hint and each
+  reclaim's result are enough.  They are enough for safety.
+  They leave the gateway's grace period, and the nesting in a
+  chain of gateways, to operator configuration.
+- Carrying the limits in the EXCHANGE_ID reply.  The result has
+  no spare field, and RFC 8178 does not allow an extension to
+  change the XDR of an existing result.
+- Advertising time remaining instead of the configured value.
+  It is stale on arrival and the gateway can compute it.
 - An optional cap on the reclaim interval.  Availability for
   direct clients would then depend on a policy the backend need
   not have.
@@ -871,9 +932,17 @@ gateway and backend behavior with no new wire elements.
 5. **Limit guidance.**  The absence limit: long enough for a
    reboot, short enough to be tolerable.  The reclaim cap: a
    floor in backend lease periods, long enough for a typical
-   front-side grace period.  No numbers proposed yet.  If no
-   reasonable floor fits real front-side grace periods, the cap
-   has to be advertised after all.
+   front-side grace period.  No numbers proposed yet.  Both
+   limits are now advertised (D3), so a gateway can see a cap
+   that does not fit, but the default still has to suit a
+   gateway nobody tuned.
+   Two points about the attributes are unsettled.  The attribute
+   numbers in the draft are provisional and need to be checked
+   against other NFSv4.2 extensions in progress.  And the
+   reported value depends on the requesting client ID when
+   policy differs by principal, which no existing attribute
+   does.  If the working group objects, the fallback is one
+   value per server and no per-principal limits.
 6. **Persistence of retained state across a backend restart.**
    Not required here.  Section 6 covers the case without it, at
    the price of best-effort continuity when both restart.  Is
@@ -934,7 +1003,7 @@ numbers below are the outline's.
 | Section 1, mechanism as client-restart state retention | Abstract, 1, 5 |
 | D1, flags and the reclaimable hint | 6.1 |
 | D2, what is retained | 6.2 |
-| D3, two intervals, two limits | 6.3, 8 |
+| D3, two intervals, two limits, the limit attributes | 6.3, 7.4, 8, 9 |
 | D4, reuse of reclaim operations, order of the test | 6.4, 6.8 |
 | D5, matching rule, lock under its reclaimed open | 6.4 |
 | D6, gate relaxed for OPEN | 6.5 |

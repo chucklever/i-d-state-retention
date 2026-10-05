@@ -87,8 +87,8 @@ Short; refers to the problem statement for the full analysis.
 ## 6. Protocol Extension
 
 - Kind of extension: two previously unassigned bits in the
-  EXCHANGE_ID flag word, an XDR extension that RFC 8178 Section
-  4.2 allows within a minor version.
+  EXCHANGE_ID flag word and two new attributes, XDR extensions
+  that RFC 8178 Section 4.2 allows within a minor version.
 - The flags are not the whole extension.  Negotiating them
   changes how later operations behave for that client ID.  The
   draft has to present every such behavior as the defined
@@ -150,7 +150,9 @@ Short; refers to the problem statement for the full analysis.
   Section 4.4.3).
 - Why no attribute advertises support (RFC 8178 Section 6, RFC
   9754): retention belongs to a client ID and is learned at
-  EXCHANGE_ID, and an attribute is read per file system.
+  EXCHANGE_ID, and an attribute is read per file system.  The
+  limits are attributes all the same (Section 6.3): a client
+  wants them only once it has a session.
 
 ### 6.2. Retained State (D2)
 
@@ -180,7 +182,11 @@ Short; refers to the problem statement for the full analysis.
   still present succeeds.
 - The cap governs unreclaimed state only, and is not paused by
   loss of lease during the reclaim interval.
-- Neither limit is advertised.
+- Both limits are advertised, as the per-server attributes
+  retain_absence_limit and retain_reclaim_cap, read like
+  lease_time.  Mandatory for a server with the extension.  The
+  value is the configured limit for the requesting client ID,
+  and the server does not reach a limit sooner than it reported.
 - A retaining client that returns with the same verifier inside
   the absence limit resumes with its state intact.
 - Change to EXCHANGE_ID and CREATE_SESSION processing for the
@@ -285,9 +291,12 @@ Short; refers to the problem statement for the full analysis.
 
 ### 7.4. Restart Sequence (D8)
 
-- Order: EXCHANGE_ID and CREATE_SESSION to the backend, begin
-  front-side grace, forward reclaims, end front-side grace,
-  RECLAIM_COMPLETE to the backend.
+- Order: EXCHANGE_ID and CREATE_SESSION to the backend, read the
+  limit attributes, begin front-side grace, forward reclaims,
+  end front-side grace, RECLAIM_COMPLETE to the backend.
+- The front-side grace period ends inside the reclaim cap where
+  the front side allows it.  A cap too short to fit is reported
+  to the operator (D3).
 - Hint set: notify clients and forward each reclaim; grant the
   front-side reclaim only if the back-side one succeeded.
 - Hint clear, or no extension: notify clients, RECLAIM_COMPLETE
@@ -336,6 +345,16 @@ Short; refers to the problem statement for the full analysis.
 - NFSv4 clients: revoked stateids and SEQ4_STATUS flags.
 - NLM clients: no mechanism other than a refused reclaim.
 
+### 7.9. Chained Gateways
+
+- Not normative.  A gateway whose backend is a gateway: the
+  inner gateway is a retaining client of the backend and a
+  server with the extension to the outer gateway.
+- The safety rule holds at each gateway.  Each restart case.
+- Nesting of grace periods inside the backend's reclaim cap,
+  computed from the limit attributes (D3).
+- Hint propagation, deny modes, delegations.
+
 ## 8. Backend Server Behavior
 
 - Absence limit and reclaim cap: guidance on their values.
@@ -349,7 +368,8 @@ Short; refers to the problem statement for the full analysis.
 
 ## 9. XDR Description
 
-- Extraction instructions; the two flag constants.
+- Extraction instructions; the two flag constants; the two
+  attribute numbers and their types.
 
 ## 10. Security Considerations
 
