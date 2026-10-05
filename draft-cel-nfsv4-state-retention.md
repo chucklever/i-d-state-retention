@@ -303,9 +303,11 @@ retained under CLAIM_DELEGATE_PREV ({{Section 10.2.1 of
 RFC8881}}).  A future version of this document, or a separate
 one, may permit a gateway to grant a front-side delegation on
 that condition.  Also out of scope are pNFS layouts on either
-side of the gateway, a back side other than NFSv4.2, failover of
-a gateway's state to a different gateway host, and a gateway
-whose backend is itself a gateway.
+side of the gateway, a back side other than NFSv4.2, and failover
+of a gateway's state to a different gateway host.  A gateway
+whose backend is itself a gateway is not specified, but
+{{chained}} describes how the mechanism behaves in that
+configuration.
 
 
 # Protocol Extension {#extension}
@@ -1185,6 +1187,96 @@ than to deny the client's reclaim after SM_NOTIFY.  NLM provides
 no notification for a lock lost while the client was not
 reclaiming.  This is a limitation of NLM, which this document
 records and does not fix.
+
+## Chained Gateways {#chained}
+
+This subsection is not normative.  It describes how the mechanism
+behaves when a gateway's backend is itself a gateway, a
+configuration this document does not otherwise specify.
+
+In a chain of two gateways, the outer gateway serves the
+front-side clients and mounts the inner gateway, and the inner
+gateway mounts the backend.  Both mounts use NFSv4.2.  The inner
+gateway takes both roles this document defines.  Toward the
+backend it is a retaining client.  Toward the outer gateway it is
+a server that implements the extension, and the outer gateway is
+its retaining client.  No protocol element beyond those in
+{{extension}} is involved.
+
+The safety rule of {{gateway-reclaim}} applies at each gateway
+separately.  The outer gateway grants a front-side reclaim only if
+the inner gateway granted the corresponding reclaim, and the inner
+gateway grants that reclaim only if the backend did.  A front-side
+reclaim therefore succeeds only if the backend's protection for
+the state was continuous, however many gateways the chain has.
+What the chain puts at risk is continuity, and the cases below
+differ in how much of it survives.
+
+When the outer gateway restarts alone, the inner gateway retains
+the outer gateway's state by continuing to hold the derived state
+on the backend.  The inner gateway's lease on the backend never
+lapses, so the backend observes nothing and the backend's limits
+do not come into play.  The inner gateway's absence limit and
+reclaim cap are the only bounds on how long that state blocks
+other clients of the backend.
+
+When the inner gateway restarts alone, the outer gateway sees an
+ordinary restart of its backend and behaves as
+{{gateway-backend-restart}} describes.  It reclaims the derived
+state it holds in memory during the inner gateway's grace period
+and does not notify its front-side clients.  The inner gateway
+forwards each of those reclaims to the backend, which answers from
+retained state.
+
+When both gateways restart, the reclaim intervals nest.  The outer
+gateway withholds RECLAIM_COMPLETE from the inner gateway until
+the outer gateway's front-side grace period ends.  The inner
+gateway's grace period has to stay open until then, and the inner
+gateway withholds RECLAIM_COMPLETE from the backend for as long as
+its grace period is open.  The backend's reclaim cap therefore has
+to cover the inner gateway's grace period, which in turn has to
+cover the time the outer gateway takes to restart plus the outer
+gateway's grace period.  Each further gateway in a chain adds its
+own restart time and grace period to what the backend's reclaim
+cap has to cover.  Neither limit is advertised ({{limits}}), so an
+operator has to configure each server in the chain with the
+servers in front of it in mind.  Where the limits do not nest, the
+reclaims still outstanding when the shorter limit is reached fail,
+and the front-side clients that sent them are told that their
+state is lost.
+
+The recommendations in {{grace}} carry more weight for an inner
+gateway than for a backend.  If the inner gateway restarts while
+the outer gateway is absent, and the inner gateway does not hold
+its grace period open for the outer gateway, the grace period ends
+with no reclaim received.  The inner gateway then sends
+RECLAIM_COMPLETE, and the backend releases all of the state.  An
+inner gateway that records the outer gateway as a retaining client
+and holds its grace period open avoids that outcome.  How long it
+can wait is bounded by its own absence limit and, because it is
+withholding RECLAIM_COMPLETE from the backend throughout, by the
+backend's reclaim cap.
+
+An inner gateway that has itself restarted can set
+EXCHGID4_FLAG_RECLAIMABLE_R in its reply to the outer gateway only
+if the backend set the flag in its reply to the inner gateway.
+Otherwise the outer gateway would run a front-side grace period in
+which every reclaim is refused.
+
+Share deny modes are protected against direct clients only if
+every gateway in the chain runs in pass-through mode
+({{recoverable}}).  A single local-only gateway drops the deny
+bits at that point in the chain, and the backend never sees them.
+Owner derivation needs nothing further.  The inner gateway derives
+its back-side owners from the outer gateway's client owner string
+and from the owners the outer gateway derived ({{owners}}), so
+each front-side owner still maps to one owner at the backend, and
+the mapping is the same after any restart.
+
+The inner gateway does not grant delegations to the outer gateway
+({{gateway-nfsv4}}).  The outer gateway therefore holds no
+back-side delegations, and it gives up the caching that such
+delegations would have allowed.
 
 
 # Backend Server Behavior {#backend}
