@@ -3,9 +3,9 @@
 
 
 Network File System Version 4                                   C. Lever
-Internet-Draft                                            2 October 2026
+Internet-Draft                                            5 October 2026
 Intended status: Standards Track                                        
-Expires: 5 April 2027
+Expires: 8 April 2027
 
 
            State Retention Across Client Restart for NFSv4.2
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 April 2027.
+   This Internet-Draft will expire on 8 April 2027.
 
 Copyright Notice
 
@@ -81,11 +81,12 @@ Table of Contents
      5.1.  Capability Negotiation
      5.2.  Retaining State
      5.3.  Intervals and Limits
-     5.4.  Reclaiming Outside the Grace Period
-     5.5.  Operations Before RECLAIM_COMPLETE
-     5.6.  Completing Reclaim
-     5.7.  Errors
-     5.8.  Interaction with the Server's Grace Period
+     5.4.  Limit Attributes
+     5.5.  Reclaiming Outside the Grace Period
+     5.6.  Operations Before RECLAIM_COMPLETE
+     5.7.  Completing Reclaim
+     5.8.  Errors
+     5.9.  Interaction with the Server's Grace Period
    6.  Gateway Server Behavior
      6.1.  What Is Recoverable
      6.2.  Owner Derivation
@@ -95,6 +96,7 @@ Table of Contents
      6.6.  NFSv4 Front-Side Clients
      6.7.  Backend Restart
      6.8.  Reporting Lost State
+     6.9.  Chained Gateways
    7.  Backend Server Behavior
      7.1.  Choosing the Limits
      7.2.  Resource Limits
@@ -341,8 +343,10 @@ Table of Contents
    future version of this document, or a separate one, may permit a
    gateway to grant a front-side delegation on that condition.  Also out
    of scope are pNFS layouts on either side of the gateway, a back side
-   other than NFSv4.2, failover of a gateway's state to a different
-   gateway host, and a gateway whose backend is itself a gateway.
+   other than NFSv4.2, and failover of a gateway's state to a different
+   gateway host.  A gateway whose backend is itself a gateway is not
+   specified, but Section 6.9 describes how the mechanism behaves in
+   that configuration.
 
 5.  Protocol Extension
 
@@ -383,6 +387,11 @@ Table of Contents
    confirmed.  The flag is a hint that lets a gateway decide whether to
    run a front-side grace period at all.  It is not proof that any
    particular item of state was retained.
+
+   The backend bounds how long it retains state with two limits, and it
+   advertises both as attributes (Section 5.4).  A gateway reads them
+   once it has a session and uses them to fit its front-side grace
+   period inside the time the backend allows for reclaim.
 
 5.1.  Capability Negotiation
 
@@ -460,7 +469,10 @@ Table of Contents
    is read per file system, with a filehandle in hand.  Retention is a
    property of a client ID, and a client has to learn whether retention
    is available at EXCHANGE_ID, before the client has a session with
-   which to read an attribute.
+   which to read an attribute.  That reasoning does not extend to the
+   limits a server places on retention.  A client has no use for those
+   until it has a session, and this extension does advertise them as
+   attributes (Section 5.4).
 
 5.2.  Retaining State
 
@@ -513,7 +525,7 @@ Table of Contents
    for a retaining client.  The server makes the record when it releases
    or revokes retained state, whether at a limit, at the first
    conflicting request after a limit, or by administrative action.
-   Section 5.8 describes the consequences for a server restart.
+   Section 5.9 describes the consequences for a server restart.
 
    Retained state accumulates across repeated restarts of the same
    client owner.  If a new instance is confirmed, reclaims some of the
@@ -521,7 +533,7 @@ Table of Contents
    RECLAIM_COMPLETE, the server retains both the state that instance
    held and the remainder it never reclaimed.  A RECLAIM_COMPLETE from
    any later instance releases everything not yet reclaimed, as
-   Section 5.6 specifies.  Each item of retained state keeps the
+   Section 5.7 specifies.  Each item of retained state keeps the
    reclaim-cap clock started by the first confirmation after it was
    retained.  A later confirmation MUST NOT restart that clock.  Without
    that rule, a client that restarts in a loop could block other clients
@@ -532,7 +544,7 @@ Table of Contents
    nothing they were owed.
 
    A server is not required to preserve retained state across a restart
-   of the server itself.  Section 5.8 describes what happens when a
+   of the server itself.  Section 5.9 describes what happens when a
    server restarts during an absence interval or a reclaim interval.
 
 5.3.  Intervals and Limits
@@ -566,11 +578,67 @@ Table of Contents
    place succeeds, and does so safely, because nothing that conflicts
    was granted in the meantime.
 
-   Neither limit is advertised to the client.  A client needs to know
-   only whether reclaims can succeed, which the EXCHANGE_ID reply tells
-   it, and the reply to each reclaim is authoritative.
+   A server advertises both limits to its clients, as Section 5.4
+   specifies.  The reply to each reclaim remains the authoritative
+   answer to whether an item of state survived.
 
-5.4.  Reclaiming Outside the Grace Period
+5.4.  Limit Attributes
+
+   This extension defines two attributes, through which a server reports
+   the absence limit and the reclaim cap.  Section 8 gives their numbers
+   and types.
+
+              +======================+====+===========+=====+
+              | Name                 | Id | Data Type | Acc |
+              +======================+====+===========+=====+
+              | retain_absence_limit | 92 | uint32_t  | R   |
+              +----------------------+----+-----------+-----+
+              | retain_reclaim_cap   | 93 | uint32_t  | R   |
+              +----------------------+----+-----------+-----+
+
+                         Table 1: Limit attributes
+
+   retain_absence_limit:  The absence limit, in seconds.
+
+   retain_reclaim_cap:  The reclaim cap, in seconds.
+
+   Both are per-server attributes in the manner of lease_time
+   (Section 5.8.1.11 of [RFC8881]).  A client can read them with GETATTR
+   on any filehandle the server provides, and the result does not depend
+   on the filehandle.  Neither can be set.
+
+   A server that implements this extension MUST support both attributes.
+   A server that does not implement the extension does not list them in
+   supported_attrs, which a client can rely on only as Section 6 of
+   [RFC8178] describes.
+
+   To a retaining client, a server reports the limits it applies to the
+   client ID under which the request was sent.  A server whose policy
+   gives different principals different limits therefore reports
+   different values to different clients.  To a client that is not a
+   retaining client, a server reports its default limits.  Those values
+   tell such a client how long retained state can block it, and have no
+   other effect on that client.
+
+   Each value is the configured limit, not the time remaining in an
+   interval.  A client knows when its reclaim interval began, since its
+   own CREATE_SESSION began it, and can compute what is left.
+
+   A server applies to each client ID the limits that were in effect
+   when that client ID was confirmed.  For the state of that client ID,
+   the server MUST NOT reach either limit earlier than the value it
+   reported.  A change to the server's configuration applies to client
+   IDs confirmed after the change.  Administrative release
+   (Section 7.3), a resource limit (Section 7.2), and a restart of the
+   server (Section 5.9) can each end retention sooner, and the
+   attributes make no promise against them.
+
+   When a client owner restarts repeatedly, the reclaim cap for state
+   retained in an earlier round is already running (Section 5.2).  The
+   value of retain_reclaim_cap applies in full only to state retained at
+   the most recent confirmation.
+
+5.5.  Reclaiming Outside the Grace Period
 
    A new instance of a retaining client reclaims retained state with the
    reclaim operations that [RFC8881] already defines: OPEN with a claim
@@ -646,7 +714,7 @@ Table of Contents
    the gateway's identity toward the server and says nothing about the
    gateway's clients.  Section 9 discusses this further.
 
-5.5.  Operations Before RECLAIM_COMPLETE
+5.6.  Operations Before RECLAIM_COMPLETE
 
    Section 18.51.3 of [RFC8881] requires a client with a new client ID
    to send a global RECLAIM_COMPLETE before its first non-reclaim
@@ -659,7 +727,7 @@ Table of Contents
 
    Little of what a gateway does in that interval needs a non-reclaim
    locking operation.  Lock reclaims do not need a fresh open, because
-   each lock is reclaimed under its reclaimed open (Section 5.4).  New
+   each lock is reclaimed under its reclaimed open (Section 5.5).  New
    locking requests from front-side clients do not need one either,
    because the gateway's own grace period holds them off.  What remains
    is a gateway that opens a file in order to serve NFSv3 READ and WRITE
@@ -691,7 +759,7 @@ Table of Contents
    This extension does not dictate how a gateway's back-side client
    performs I/O.
 
-5.6.  Completing Reclaim
+5.7.  Completing Reclaim
 
    A new instance of a retaining client signals that it has finished
    reclaiming by sending RECLAIM_COMPLETE with rca_one_fs set to FALSE,
@@ -712,7 +780,7 @@ Table of Contents
 
    Once released, retained state cannot be reclaimed.  A reclaim-type
    request that arrives after RECLAIM_COMPLETE finds no retained state
-   for the client owner and receives NFS4ERR_NO_GRACE, as Section 5.4
+   for the client owner and receives NFS4ERR_NO_GRACE, as Section 5.5
    specifies.  A gateway whose front-side grace period has ended has
    nothing further to forward, so this case arises only from a reclaim
    that a front-side client sends late, and the gateway refuses it as
@@ -730,7 +798,7 @@ Table of Contents
    RECLAIM_COMPLETE at once, as Section 18.51.3 of [RFC8881] requires of
    a client that has nothing to reclaim.
 
-5.7.  Errors
+5.8.  Errors
 
    This extension defines no new error codes.  The following existing
    codes of [RFC8881] are returned in circumstances that this extension
@@ -750,32 +818,32 @@ Table of Contents
       [RFC8881] otherwise requires of expired state.
       NFS4ERR_SHARE_DENIED is also returned to a non-reclaim OPEN from
       the new instance itself when that OPEN conflicts with retained
-      state (Section 5.5).
+      state (Section 5.6).
 
    NFS4ERR_GRACE:  Returned to a non-reclaim LOCK from a new instance
       before it sends RECLAIM_COMPLETE, unchanged from Section 18.51.3
       of [RFC8881].  Not returned to a non-reclaim OPEN from a retaining
-      client in that interval (Section 5.5), and not returned to another
+      client in that interval (Section 5.6), and not returned to another
       client whose request conflicts with retained state (Section 5.2).
 
    NFS4ERR_RECLAIM_BAD:  Returned to a reclaim-type request from a
       client owner for which the server holds retained state when no
-      retained state matches the request (Section 5.4).
+      retained state matches the request (Section 5.5).
 
    NFS4ERR_NO_GRACE:  Returned to a reclaim-type request when the server
       is not in its grace period and holds no retained state for the
       client owner, whether because the state was never retained, was
       released at a limit or by administrative action, or was released
-      by an earlier RECLAIM_COMPLETE (Section 5.4, Section 5.6).
+      by an earlier RECLAIM_COMPLETE (Section 5.5, Section 5.7).
 
    A server does not return NFS4ERR_RECLAIM_CONFLICT on account of
    retained state.  State revoked for a conflicting request after a
    limit is no longer retained, and a reclaim for it receives
    NFS4ERR_RECLAIM_BAD or NFS4ERR_NO_GRACE as above.  To return
    NFS4ERR_RECLAIM_CONFLICT instead, the server would have to remember
-   what it had revoked (Section 5.4).
+   what it had revoked (Section 5.5).
 
-5.8.  Interaction with the Server's Grace Period
+5.9.  Interaction with the Server's Grace Period
 
    Retention operates while the server is running normally.  This
    subsection specifies what happens when the server itself restarts
@@ -795,7 +863,7 @@ Table of Contents
    period and its stable storage lists the client owner as permitted to
    reclaim, the server sets EXCHGID4_FLAG_RECLAIMABLE_R, and the
    client's reclaims are ordinary grace-period reclaims, which is the
-   first case in the order of Section 5.4.  If the server's grace period
+   first case in the order of Section 5.5.  If the server's grace period
    has ended, the flag is clear and the client has nothing to reclaim.
 
    If the server restarts during a reclaim interval, the new instance of
@@ -893,7 +961,7 @@ Table of Contents
    gateway.  A gateway that was local-only before a restart and pass-
    through after it would send a reclaim OPEN with deny bits that the
    retained open lacks, and the backend would answer NFS4ERR_RECLAIM_BAD
-   (Section 5.4).  The mode is therefore persistent configuration
+   (Section 5.5).  The mode is therefore persistent configuration
    (Section 6.3).  A gateway whose mode has nonetheless changed retries
    the reclaim without deny bits and treats the result as local-only.
 
@@ -913,7 +981,7 @@ Table of Contents
 
 6.2.  Owner Derivation
 
-   The matching rule in Section 5.4 requires the new instance of a
+   The matching rule in Section 5.5 requires the new instance of a
    gateway to present the same open-owner and lock-owner strings that
    the prior instance used.  The gateway has no record of those strings
    after a restart other than what it can reconstruct from the reclaim
@@ -994,17 +1062,33 @@ Table of Contents
    1.  The gateway sends EXCHANGE_ID with EXCHGID4_FLAG_RETAIN_STATE to
        the backend, then CREATE_SESSION.
 
-   2.  The gateway begins its front-side grace period and notifies its
+   2.  The gateway reads retain_absence_limit and retain_reclaim_cap
+       from the backend (Section 5.4).
+
+   3.  The gateway begins its front-side grace period and notifies its
        front-side clients: SM_NOTIFY to the callers in its NSM monitor
        list, and the ordinary NFSv4 restart indications to its NFSv4
        clients.
 
-   3.  The gateway forwards each front-side reclaim to the backend as a
+   4.  The gateway forwards each front-side reclaim to the backend as a
        back-side reclaim and answers the front-side client from the
        backend's reply.
 
-   4.  When the front-side grace period ends, the gateway sends
+   5.  When the front-side grace period ends, the gateway sends
        RECLAIM_COMPLETE to the backend.
+
+   The reclaim cap runs from the gateway's CREATE_SESSION.  A gateway
+   SHOULD choose a front-side grace period that ends, with time left to
+   send RECLAIM_COMPLETE, before the reclaim cap elapses.  The front
+   side sets a floor on that choice.  NFSv4 front-side clients need at
+   least one lease period of the gateway in which to notice the restart
+   and reclaim, and NLM clients need time to act on SM_NOTIFY.  When the
+   reclaim cap is shorter than that floor, the gateway runs the grace
+   period its front side needs, and reclaims that arrive after the cap
+   are refused as Section 5.5 specifies.  A gateway SHOULD report that
+   condition to its operator when it starts, because the condition is a
+   configuration error that the operator can correct at the gateway or
+   at the backend.
 
    The gateway decides once, from the EXCHANGE_ID reply, whether
    reclaims can succeed, and then the backend decides each reclaim.
@@ -1015,7 +1099,7 @@ Table of Contents
    MUST refuse a front-side reclaim whose back-side reclaim failed.  The
    gateway does not need to know whether the backend answered from
    retained state or from its own grace period, because the requests are
-   the same in both cases (Section 5.4).  The gateway withholds
+   the same in both cases (Section 5.5).  The gateway withholds
    RECLAIM_COMPLETE until its front-side grace period ends.
 
    If the reply does not carry EXCHGID4_FLAG_RECLAIMABLE_R, the gateway
@@ -1048,7 +1132,7 @@ Table of Contents
    NLM does not gate READ and WRITE on recovery, so NFSv3 I/O continues
    to arrive during the gateway's grace period.  The gateway serves it
    either by opening the file on the backend with a non-reclaim OPEN,
-   which Section 5.5 permits before RECLAIM_COMPLETE, or with a special
+   which Section 5.6 permits before RECLAIM_COMPLETE, or with a special
    stateid.
 
 6.6.  NFSv4 Front-Side Clients
@@ -1140,7 +1224,7 @@ Table of Contents
    reclaims fail with NFS4ERR_NO_GRACE and the gateway refuses the
    corresponding front-side reclaims.  Continuity in this case therefore
    depends on the backend's grace period outlasting the gateway's, which
-   Section 5.8 recommends but [RFC8881] does not promise.  The safety
+   Section 5.9 recommends but [RFC8881] does not promise.  The safety
    rule of Section 6.4 holds regardless: nothing is re-granted on the
    front side without a successful back-side reclaim.
 
@@ -1175,6 +1259,94 @@ Table of Contents
    This is a limitation of NLM, which this document records and does not
    fix.
 
+6.9.  Chained Gateways
+
+   This subsection is not normative.  It describes how the mechanism
+   behaves when a gateway's backend is itself a gateway, a configuration
+   this document does not otherwise specify.
+
+   In a chain of two gateways, the outer gateway serves the front-side
+   clients and mounts the inner gateway, and the inner gateway mounts
+   the backend.  Both mounts use NFSv4.2.  The inner gateway takes both
+   roles this document defines.  Toward the backend it is a retaining
+   client.  Toward the outer gateway it is a server that implements the
+   extension, and the outer gateway is its retaining client.  No
+   protocol element beyond those in Section 5 is involved.
+
+   The safety rule of Section 6.4 applies at each gateway separately.
+   The outer gateway grants a front-side reclaim only if the inner
+   gateway granted the corresponding reclaim, and the inner gateway
+   grants that reclaim only if the backend did.  A front-side reclaim
+   therefore succeeds only if the backend's protection for the state was
+   continuous, however many gateways the chain has.  What the chain puts
+   at risk is continuity, and the cases below differ in how much of it
+   survives.
+
+   When the outer gateway restarts alone, the inner gateway retains the
+   outer gateway's state by continuing to hold the derived state on the
+   backend.  The inner gateway's lease on the backend never lapses, so
+   the backend observes nothing and the backend's limits do not come
+   into play.  The inner gateway's absence limit and reclaim cap are the
+   only bounds on how long that state blocks other clients of the
+   backend.
+
+   When the inner gateway restarts alone, the outer gateway sees an
+   ordinary restart of its backend and behaves as Section 6.7 describes.
+   It reclaims the derived state it holds in memory during the inner
+   gateway's grace period and does not notify its front-side clients.
+   The inner gateway forwards each of those reclaims to the backend,
+   which answers from retained state.
+
+   When both gateways restart, the reclaim intervals nest.  The outer
+   gateway withholds RECLAIM_COMPLETE from the inner gateway until the
+   outer gateway's front-side grace period ends.  The inner gateway's
+   grace period has to stay open until then, and the inner gateway
+   withholds RECLAIM_COMPLETE from the backend for as long as its grace
+   period is open.  The backend's reclaim cap therefore has to cover the
+   inner gateway's grace period, which in turn has to cover the time the
+   outer gateway takes to restart plus the outer gateway's grace period.
+   Each further gateway in a chain adds its own restart time and grace
+   period to what the backend's reclaim cap has to cover.  Each gateway
+   can read the limits of the server behind it (Section 5.4).  An inner
+   gateway can therefore report to the outer gateway limits that fit
+   inside the ones the backend reported to it, and the outer gateway
+   sizes its front-side grace period from those.  Where the limits do
+   not nest, the reclaims still outstanding when the shorter limit is
+   reached fail, and the front-side clients that sent them are told that
+   their state is lost.
+
+   The recommendations in Section 5.9 carry more weight for an inner
+   gateway than for a backend.  If the inner gateway restarts while the
+   outer gateway is absent, and the inner gateway does not hold its
+   grace period open for the outer gateway, the grace period ends with
+   no reclaim received.  The inner gateway then sends RECLAIM_COMPLETE,
+   and the backend releases all of the state.  An inner gateway that
+   records the outer gateway as a retaining client and holds its grace
+   period open avoids that outcome.  How long it can wait is bounded by
+   its own absence limit and, because it is withholding RECLAIM_COMPLETE
+   from the backend throughout, by the backend's reclaim cap.
+
+   An inner gateway that has itself restarted can set
+   EXCHGID4_FLAG_RECLAIMABLE_R in its reply to the outer gateway only if
+   the backend set the flag in its reply to the inner gateway.
+   Otherwise the outer gateway would run a front-side grace period in
+   which every reclaim is refused.
+
+   Share deny modes are protected against direct clients only if every
+   gateway in the chain runs in pass-through mode (Section 6.1).  A
+   single local-only gateway drops the deny bits at that point in the
+   chain, and the backend never sees them.  Owner derivation needs
+   nothing further.  The inner gateway derives its back-side owners from
+   the outer gateway's client owner string and from the owners the outer
+   gateway derived (Section 6.2), so each front-side owner still maps to
+   one owner at the backend, and the mapping is the same after any
+   restart.
+
+   The inner gateway does not grant delegations to the outer gateway
+   (Section 6.6).  The outer gateway therefore holds no back-side
+   delegations, and it gives up the caching that such delegations would
+   have allowed.
+
 7.  Backend Server Behavior
 
    Section 5 specifies what a server does for a retaining client.  This
@@ -1196,9 +1368,10 @@ Table of Contents
    late front-side reclaims to be refused and their clients told that
    state is lost.  A server SHOULD make the reclaim cap configurable,
    and its default SHOULD be no shorter than the server's own lease
-   period.  Because neither limit is advertised (Section 5.3), an
-   operator who runs a gateway against a server sets the gateway's
-   front-side grace period with the server's reclaim cap in mind.
+   period.  A gateway reads the reclaim cap and fits its front-side
+   grace period inside it where it can (Section 6.4), but a gateway
+   cannot shorten that grace period below what its front side needs.
+   The default therefore has to suit a gateway that nobody has tuned.
 
 7.2.  Resource Limits
 
@@ -1208,7 +1381,7 @@ Table of Contents
    to retain state because of a resource limit, it releases that state
    as it would for a client that was not a retaining client, and a later
    reclaim for it receives NFS4ERR_RECLAIM_BAD or NFS4ERR_NO_GRACE
-   (Section 5.4).  A server that cannot retain the state of a client
+   (Section 5.5).  A server that cannot retain the state of a client
    owner at all SHOULD decline retention at EXCHANGE_ID (Section 5.1)
    rather than accept and then release.
 
@@ -1244,7 +1417,7 @@ Table of Contents
    bookkeeping is impractical releases retained state outright when a
    limit is reached, which Section 5.3 permits.
 
-   A server that follows the recommendation of Section 5.8 also records
+   A server that follows the recommendation of Section 5.9 also records
    that a client owner is a retaining client, so that after a server
    restart it can hold its grace period open for that client owner.
 
@@ -1276,10 +1449,10 @@ Table of Contents
 
 8.  XDR Description
 
-   This extension adds two constants to the XDR description of NFSv4.2
-   in [RFC7863].  No new data types or operations are added, and the XDR
-   of EXCHANGE_ID is unchanged: the new constants name bits in the
-   existing eia_flags and eir_flags words.
+   This extension adds two flag constants and two attributes to the XDR
+   description of NFSv4.2 in [RFC7863].  No operations are added, and
+   the XDR of EXCHANGE_ID is unchanged: the flag constants name bits in
+   the existing eia_flags and eir_flags words.
 
    /// /*
    ///  * EXCHANGE_ID flags defined by this document.  They are
@@ -1290,6 +1463,16 @@ Table of Contents
    /// const EXCHGID4_FLAG_RETAIN_STATE        = 0x00000008;
    /// const EXCHGID4_FLAG_RECLAIMABLE_R       = 0x20000000;
    ///
+   /// /*
+   ///  * Attributes defined by this document.  Each value is a
+   ///  * count of seconds.
+   ///  */
+   /// typedef uint32_t        fattr4_retain_absence_limit;
+   /// typedef uint32_t        fattr4_retain_reclaim_cap;
+   ///
+   /// const FATTR4_RETAIN_ABSENCE_LIMIT       = 92;
+   /// const FATTR4_RETAIN_RECLAIM_CAP         = 93;
+   ///
 
    EXCHGID4_FLAG_RETAIN_STATE takes the next unassigned bit after the
    capability flags of [RFC8881] and [RFC7862], which it resembles in
@@ -1298,13 +1481,18 @@ Table of Contents
    EXCHGID4_FLAG_CONFIRMED_R, which it resembles in being set only by
    the server.  Section 5.1 specifies the use of both.
 
+   Section 5.4 specifies the two attributes.  Their numbers are
+   provisional.  Other extensions to NFSv4.2 that are in progress also
+   assign attribute numbers, and the numbers here will change if they
+   collide with an assignment that is published first.
+
 8.1.  Extraction of XDR
 
    The XDR description is embedded in this document in a way that makes
    it simple for the reader to extract into a ready-to-compile form,
    following the practice of [RFC7863] and [RFC9754].  The reader can
    feed this document into the following shell script to produce the
-   machine-readable XDR description of the new constants:
+   machine-readable XDR description of the new constants and types:
 
    #!/bin/sh
    grep '^ *///' $* | sed 's?^ */// ??' | sed 's?^ *///$??'
@@ -1316,10 +1504,10 @@ Table of Contents
    sh extract.sh < spec.txt > state_retention_prot.x
 
    The effect of the script is to remove leading blank space from each
-   line, plus a sentinel sequence of "///".  The extracted constants are
-   written in the XDR language of [RFC4506] and belong with the
-   EXCHANGE_ID constants in the nfs4_prot.x file generated from
-   [RFC7863].
+   line, plus a sentinel sequence of "///".  The extracted definitions
+   are written in the XDR language of [RFC4506] and belong with the
+   EXCHANGE_ID constants and the attribute definitions in the
+   nfs4_prot.x file generated from [RFC7863].
 
 9.  Security Considerations
 
@@ -1355,7 +1543,7 @@ Table of Contents
 9.2.  Reclaiming State the Prior Instance Did Not Hold
 
    A reclaim succeeds only when it matches retained state of the same
-   client owner under the same owner string (Section 5.4).  A new
+   client owner under the same owner string (Section 5.5).  A new
    instance of a retaining client therefore cannot recover state that
    the prior instance did not hold, and no client can recover another
    client owner's retained state.  SP4_MACH_CRED, where required, ties
@@ -1413,7 +1601,7 @@ Table of Contents
    interim.  Section 6.4 forbids this: a gateway MUST grant a front-side
    reclaim only when the corresponding back-side reclaim succeeded.  The
    same rule protects against a server that ended its grace period early
-   (Section 5.8) and against retained state released at a limit: in each
+   (Section 5.9) and against retained state released at a limit: in each
    case the application learns that its state was lost rather than
    proceeding on a false assumption.  Local-only deny modes
    (Section 6.1) are the one place a front-side client receives a weaker
@@ -1436,8 +1624,11 @@ Table of Contents
 
    The two EXCHANGE_ID flag bits that Section 8 assigns are not managed
    by an IANA registry.  [RFC8881] assigns the existing flag bits in its
-   XDR description, and [RFC7862] added one in the same way.  This
-   document follows that practice.
+   XDR description, and [RFC7862] added one in the same way.  The two
+   attribute numbers that Section 8 assigns are not managed by an IANA
+   registry either.  [RFC8881] and [RFC7862] assign attribute numbers in
+   their XDR descriptions, and [RFC9754] added attributes in the same
+   way.  This document follows that practice.
 
 11.  References
 
@@ -1544,7 +1735,9 @@ A.1.  Gateway Restart with an NLM Client
        sessions, and keeps the old instance's opens and locks as
        retained state.
 
-   9.  G starts its front-side grace period and sends SM_NOTIFY to C.
+   9.  G reads retain_reclaim_cap from B and chooses a front-side grace
+       period that ends before the cap elapses from step 8.  G starts
+       that grace period and sends SM_NOTIFY to C.
 
    10. C sends NLM_LOCK with the reclaim flag set, for the same owner
        and range, to G.

@@ -24,18 +24,18 @@ permit the new instance of that client to reclaim that state.
 <meta content="draft-cel-nfsv4-state-retention-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.1
-    Python 3.14.7
-    ConfigArgParse 1.7.7
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.10
+    platformdirs 4.12.2
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.4
+    wcwidth 0.9.1
 -->
 <link href="draft-cel-nfsv4-state-retention.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1055,7 +1055,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Lever</td>
-<td class="center">Expires 5 April 2027</td>
+<td class="center">Expires 8 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg {
 <dd class="internet-draft">draft-cel-nfsv4-state-retention-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-02" class="published">2 October 2026</time>
+<time datetime="2026-10-05" class="published">5 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-05">5 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-04-08">8 April 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1129,7 @@ permit the new instance of that client to reclaim that state.<a href="#section-a
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1183,19 +1183,22 @@ permit the new instance of that client to reclaim that state.<a href="#section-a
                 <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-intervals-and-limits" class="internal xref">Intervals and Limits</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-reclaiming-outside-the-grac" class="internal xref">Reclaiming Outside the Grace Period</a></p>
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-limit-attributes" class="internal xref">Limit Attributes</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
-                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-operations-before-reclaim_c" class="internal xref">Operations Before RECLAIM_COMPLETE</a></p>
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-reclaiming-outside-the-grac" class="internal xref">Reclaiming Outside the Grace Period</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
-                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-completing-reclaim" class="internal xref">Completing Reclaim</a></p>
+                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-operations-before-reclaim_c" class="internal xref">Operations Before RECLAIM_COMPLETE</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.7">
-                <p id="section-toc.1-1.5.2.7.1"><a href="#section-5.7" class="auto internal xref">5.7</a>.  <a href="#name-errors" class="internal xref">Errors</a></p>
+                <p id="section-toc.1-1.5.2.7.1"><a href="#section-5.7" class="auto internal xref">5.7</a>.  <a href="#name-completing-reclaim" class="internal xref">Completing Reclaim</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.8">
-                <p id="section-toc.1-1.5.2.8.1"><a href="#section-5.8" class="auto internal xref">5.8</a>.  <a href="#name-interaction-with-the-server" class="internal xref">Interaction with the Server's Grace Period</a></p>
+                <p id="section-toc.1-1.5.2.8.1"><a href="#section-5.8" class="auto internal xref">5.8</a>.  <a href="#name-errors" class="internal xref">Errors</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.9">
+                <p id="section-toc.1-1.5.2.9.1"><a href="#section-5.9" class="auto internal xref">5.9</a>.  <a href="#name-interaction-with-the-server" class="internal xref">Interaction with the Server's Grace Period</a></p>
 </li>
             </ul>
 </li>
@@ -1225,6 +1228,9 @@ permit the new instance of that client to reclaim that state.<a href="#section-a
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.8">
                 <p id="section-toc.1-1.6.2.8.1"><a href="#section-6.8" class="auto internal xref">6.8</a>.  <a href="#name-reporting-lost-state" class="internal xref">Reporting Lost State</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.9">
+                <p id="section-toc.1-1.6.2.9.1"><a href="#section-6.9" class="auto internal xref">6.9</a>.  <a href="#name-chained-gateways" class="internal xref">Chained Gateways</a></p>
 </li>
             </ul>
 </li>
@@ -1610,9 +1616,11 @@ occurred in the interim, which requires a back-side delegation
 retained under CLAIM_DELEGATE_PREV (<span><a href="https://rfc-editor.org/rfc/rfc8881#section-10.2.1" class="relref">Section 10.2.1</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>).  A future version of this document, or a separate
 one, may permit a gateway to grant a front-side delegation on
 that condition.  Also out of scope are pNFS layouts on either
-side of the gateway, a back side other than NFSv4.2, failover of
-a gateway's state to a different gateway host, and a gateway
-whose backend is itself a gateway.<a href="#section-4-5" class="pilcrow">¶</a></p>
+side of the gateway, a back side other than NFSv4.2, and failover
+of a gateway's state to a different gateway host.  A gateway
+whose backend is itself a gateway is not specified, but
+<a href="#chained" class="auto internal xref">Section 6.9</a> describes how the mechanism behaves in that
+configuration.<a href="#section-4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="extension">
@@ -1670,6 +1678,10 @@ reclaim-type requests from this client owner can succeed once the
 new client ID is confirmed.  The flag is a hint that lets a
 gateway decide whether to run a front-side grace period at all.
 It is not proof that any particular item of state was retained.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">The backend bounds how long it retains state with two limits, and
+it advertises both as attributes (<a href="#attrs" class="auto internal xref">Section 5.4</a>).  A gateway reads
+them once it has a session and uses them to fit its front-side
+grace period inside the time the backend allows for reclaim.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <div id="negotiate">
 <section id="section-5.1">
         <h3 id="name-capability-negotiation">
@@ -1755,7 +1767,10 @@ convenience and <span>[<a href="#RFC9754" class="cite xref">RFC9754</a>]</span> 
 attribute is read per file system, with a filehandle in hand.
 Retention is a property of a client ID, and a client has to learn
 whether retention is available at EXCHANGE_ID, before the client
-has a session with which to read an attribute.<a href="#section-5.1-10" class="pilcrow">¶</a></p>
+has a session with which to read an attribute.  That reasoning
+does not extend to the limits a server places on retention.  A
+client has no use for those until it has a session, and this
+extension does advertise them as attributes (<a href="#attrs" class="auto internal xref">Section 5.4</a>).<a href="#section-5.1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="retain">
@@ -1812,7 +1827,7 @@ a retaining client the reason does not hold while the state is
 retained, because no conflicting lock is granted.  A server <span class="bcp14">MUST NOT</span> make that record at lease expiry for a retaining client.  The
 server makes the record when it releases or revokes retained
 state, whether at a limit, at the first conflicting request after
-a limit, or by administrative action.  <a href="#grace" class="auto internal xref">Section 5.8</a> describes the
+a limit, or by administrative action.  <a href="#grace" class="auto internal xref">Section 5.9</a> describes the
 consequences for a server restart.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
 <p id="section-5.2-7">Retained state accumulates across repeated restarts of the same
 client owner.  If a new instance is confirmed, reclaims some of the
@@ -1820,7 +1835,7 @@ retained state, and then itself restarts before sending
 RECLAIM_COMPLETE, the server retains both the state that instance
 held and the remainder it never reclaimed.  A RECLAIM_COMPLETE
 from any later instance releases everything not yet reclaimed, as
-<a href="#complete" class="auto internal xref">Section 5.6</a> specifies.  Each item of retained state keeps the
+<a href="#complete" class="auto internal xref">Section 5.7</a> specifies.  Each item of retained state keeps the
 reclaim-cap clock started by the first confirmation after it was
 retained.  A later confirmation <span class="bcp14">MUST NOT</span> restart that clock.
 Without that rule, a client that restarts in a loop could block
@@ -1830,7 +1845,7 @@ does reclaim after each restart is held legitimately each time,
 so a fresh clock for it, started when the next instance is
 confirmed, costs other clients nothing they were owed.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
 <p id="section-5.2-8">A server is not required to preserve retained state across a
-restart of the server itself.  <a href="#grace" class="auto internal xref">Section 5.8</a> describes what happens
+restart of the server itself.  <a href="#grace" class="auto internal xref">Section 5.9</a> describes what happens
 when a server restarts during an absence interval or a reclaim
 interval.<a href="#section-5.2-8" class="pilcrow">¶</a></p>
 </section>
@@ -1866,42 +1881,124 @@ the state at that moment.  The server <span class="bcp14">MAY</span> keep the st
 it when the first conflicting request arrives.  A reclaim that
 finds the state still in place succeeds, and does so safely,
 because nothing that conflicts was granted in the meantime.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<p id="section-5.3-5">Neither limit is advertised to the client.  A client needs to
-know only whether reclaims can succeed, which the EXCHANGE_ID
-reply tells it, and the reply to each reclaim is authoritative.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<p id="section-5.3-5">A server advertises both limits to its clients, as <a href="#attrs" class="auto internal xref">Section 5.4</a>
+specifies.  The reply to each reclaim remains the authoritative
+answer to whether an item of state survived.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="attrs">
+<section id="section-5.4">
+        <h3 id="name-limit-attributes">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-limit-attributes" class="section-name selfRef">Limit Attributes</a>
+        </h3>
+<p id="section-5.4-1">This extension defines two attributes, through which a server
+reports the absence limit and the reclaim cap.  <a href="#xdr" class="auto internal xref">Section 8</a> gives
+their numbers and types.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<span id="name-limit-attributes-2"></span><div id="tbl-attrs">
+<table class="center" id="table-1">
+          <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-limit-attributes-2" class="selfRef">Limit attributes</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Name</th>
+              <th class="text-right" rowspan="1" colspan="1">Id</th>
+              <th class="text-left" rowspan="1" colspan="1">Data Type</th>
+              <th class="text-left" rowspan="1" colspan="1">Acc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">retain_absence_limit</td>
+              <td class="text-right" rowspan="1" colspan="1">92</td>
+              <td class="text-left" rowspan="1" colspan="1">uint32_t</td>
+              <td class="text-left" rowspan="1" colspan="1">R</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">retain_reclaim_cap</td>
+              <td class="text-right" rowspan="1" colspan="1">93</td>
+              <td class="text-left" rowspan="1" colspan="1">uint32_t</td>
+              <td class="text-left" rowspan="1" colspan="1">R</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span class="break"></span><dl class="dlParallel" id="section-5.4-3">
+          <dt id="section-5.4-3.1">retain_absence_limit:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.4-3.2">
+            <p id="section-5.4-3.2.1">The absence limit, in seconds.<a href="#section-5.4-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.4-3.3">retain_reclaim_cap:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.4-3.4">
+            <p id="section-5.4-3.4.1">The reclaim cap, in seconds.<a href="#section-5.4-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-5.4-4">Both are per-server attributes in the manner of lease_time
+(<span><a href="https://rfc-editor.org/rfc/rfc8881#section-5.8.1.11" class="relref">Section 5.8.1.11</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>).  A client can read them with
+GETATTR on any filehandle the server provides, and the result
+does not depend on the filehandle.  Neither can be set.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-5">A server that implements this extension <span class="bcp14">MUST</span> support both
+attributes.  A server that does not implement the extension does
+not list them in supported_attrs, which a client can rely on
+only as <span><a href="https://rfc-editor.org/rfc/rfc8178#section-6" class="relref">Section 6</a> of [<a href="#RFC8178" class="cite xref">RFC8178</a>]</span> describes.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.4-6">To a retaining client, a server reports the limits it applies to
+the client ID under which the request was sent.  A server whose
+policy gives different principals different limits therefore
+reports different values to different clients.  To a client that
+is not a retaining client, a server reports its default limits.
+Those values tell such a client how long retained state can block
+it, and have no other effect on that client.<a href="#section-5.4-6" class="pilcrow">¶</a></p>
+<p id="section-5.4-7">Each value is the configured limit, not the time remaining in an
+interval.  A client knows when its reclaim interval began, since
+its own CREATE_SESSION began it, and can compute what is left.<a href="#section-5.4-7" class="pilcrow">¶</a></p>
+<p id="section-5.4-8">A server applies to each client ID the limits that were in effect
+when that client ID was confirmed.  For the state of that client
+ID, the server <span class="bcp14">MUST NOT</span> reach either limit earlier than the value
+it reported.  A change to the server's configuration applies to
+client IDs confirmed after the change.  Administrative release
+(<a href="#admin" class="auto internal xref">Section 7.3</a>), a resource limit (<a href="#resources" class="auto internal xref">Section 7.2</a>), and a restart of
+the server (<a href="#grace" class="auto internal xref">Section 5.9</a>) can each end retention sooner, and the
+attributes make no promise against them.<a href="#section-5.4-8" class="pilcrow">¶</a></p>
+<p id="section-5.4-9">When a client owner restarts repeatedly, the reclaim cap for
+state retained in an earlier round is already running (<a href="#retain" class="auto internal xref">Section 5.2</a>).
+The value of retain_reclaim_cap applies in full only to state
+retained at the most recent confirmation.<a href="#section-5.4-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="reclaim">
-<section id="section-5.4">
+<section id="section-5.5">
         <h3 id="name-reclaiming-outside-the-grac">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-reclaiming-outside-the-grac" class="section-name selfRef">Reclaiming Outside the Grace Period</a>
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-reclaiming-outside-the-grac" class="section-name selfRef">Reclaiming Outside the Grace Period</a>
         </h3>
-<p id="section-5.4-1">A new instance of a retaining client reclaims retained state with
+<p id="section-5.5-1">A new instance of a retaining client reclaims retained state with
 the reclaim operations that <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> already defines: OPEN with
 a claim type of CLAIM_PREVIOUS, and LOCK with the reclaim field
 set.  This extension defines no new claim type.  A server <span class="bcp14">MUST</span>
 accept these requests from a client owner for which it holds
-retained state whether or not the server is in its grace period.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-<p id="section-5.4-2">A server processes a reclaim-type request in a fixed order:<a href="#section-5.4-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.4-3">
-<li id="section-5.4-3.1">
-            <p id="section-5.4-3.1.1">If the server is in its own grace period, the request is an
+retained state whether or not the server is in its grace period.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.5-2">A server processes a reclaim-type request in a fixed order:<a href="#section-5.5-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.5-3">
+<li id="section-5.5-3.1">
+            <p id="section-5.5-3.1.1">If the server is in its own grace period, the request is an
 ordinary reclaim and the server handles it as <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.2" class="relref">Section 8.4.2</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> specifies.  The server need not consult retained
 state, which is not required to persist across a server
-restart.<a href="#section-5.4-3.1.1" class="pilcrow">¶</a></p>
+restart.<a href="#section-5.5-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-5.4-3.2">
-            <p id="section-5.4-3.2.1">Otherwise, if the server holds retained state for the client
+          <li id="section-5.5-3.2">
+            <p id="section-5.5-3.2.1">Otherwise, if the server holds retained state for the client
 owner, the server matches the request against that state as
-described below.<a href="#section-5.4-3.2.1" class="pilcrow">¶</a></p>
+described below.<a href="#section-5.5-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-5.4-3.3">
-            <p id="section-5.4-3.3.1">Otherwise, the server returns NFS4ERR_NO_GRACE.<a href="#section-5.4-3.3.1" class="pilcrow">¶</a></p>
+          <li id="section-5.5-3.3">
+            <p id="section-5.5-3.3.1">Otherwise, the server returns NFS4ERR_NO_GRACE.<a href="#section-5.5-3.3.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-5.4-4">The client sends the same request in every case and need not know
-which case applies.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
-<p id="section-5.4-5">An OPEN reclaim matches when the server holds a retained open for
+<p id="section-5.5-4">The client sends the same request in every case and need not know
+which case applies.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
+<p id="section-5.5-5">An OPEN reclaim matches when the server holds a retained open for
 the same open-owner string and the same file, and that retained
 open includes the share access and share deny modes the request
 asks for.  A LOCK reclaim matches when the retained byte-range
@@ -1909,8 +2006,8 @@ locks of the same lock-owner string on the same file cover the
 requested range with a compatible lock type, and the open stateid
 the request is presented under was obtained by reclaiming the
 open under which the lock was originally acquired, that is, the
-retained open with the same open-owner string on the same file.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
-<p id="section-5.4-6">When a reclaim matches, the server moves the matched state from
+retained open with the same open-owner string on the same file.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
+<p id="section-5.5-6">When a reclaim matches, the server moves the matched state from
 the prior instance to the new client ID and returns a new stateid
 for it.  A reclaimed byte-range lock keeps its association with
 its lock-owner, its open-owner, and its file, as <span><a href="https://rfc-editor.org/rfc/rfc8881#section-9.1.1" class="relref">Section 9.1.1</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> describes for any lock.  The new instance therefore
@@ -1919,8 +2016,8 @@ order of an ordinary grace-period reclaim, and the server path is
 the same.  A client <span class="bcp14">MUST NOT</span> attempt to reclaim a retained lock
 under a non-reclaim open.  Doing so would move the lock to a lock
 stateid under a different open, with consequences for CLOSE and
-LOCKU that <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> does not define.<a href="#section-5.4-6" class="pilcrow">¶</a></p>
-<p id="section-5.4-7">When a reclaim does not match any retained state of the client
+LOCKU that <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> does not define.<a href="#section-5.5-6" class="pilcrow">¶</a></p>
+<p id="section-5.5-7">When a reclaim does not match any retained state of the client
 owner, the server returns NFS4ERR_RECLAIM_BAD.  When the server no
 longer holds any retained state for the client owner, it returns
 NFS4ERR_NO_GRACE.  State that the server revoked for a
@@ -1928,8 +2025,8 @@ conflicting request after a limit in <a href="#limits" class="auto internal xref
 longer retained, so a reclaim for it receives one of these two
 errors.  A server does not return NFS4ERR_RECLAIM_CONFLICT for
 retained state, because to do so it would have to remember what it
-revoked.<a href="#section-5.4-7" class="pilcrow">¶</a></p>
-<p id="section-5.4-8">Matching on owner strings makes owner continuity a requirement.
+revoked.<a href="#section-5.5-7" class="pilcrow">¶</a></p>
+<p id="section-5.5-8">Matching on owner strings makes owner continuity a requirement.
 The new instance <span class="bcp14">MUST</span> present the same open-owner and lock-owner
 strings that the prior instance used for the state the new
 instance reclaims.
@@ -1939,8 +2036,8 @@ on: a reclaim succeeds only for an owner that held the state, so
 the gateway derives owner strings deterministically from
 front-side identity, as <a href="#owners" class="auto internal xref">Section 6.2</a> specifies.  The derived owner
 strings include the open-owner of an open the gateway created only
-to carry an NLM client's locks.<a href="#section-5.4-8" class="pilcrow">¶</a></p>
-<p id="section-5.4-9">Owner matching is a record, not authentication.  The server sees
+to carry an NLM client's locks.<a href="#section-5.5-8" class="pilcrow">¶</a></p>
+<p id="section-5.5-9">Owner matching is a record, not authentication.  The server sees
 opaque strings and cannot tell which front-side client a reclaim
 is for, so it honors a reclaim under the right owner string
 whoever presented that reclaim to the gateway.  Whether one
@@ -1948,40 +2045,40 @@ front-side client can present another's owner is decided on the
 front side, by what the gateway checks before it forwards a
 reclaim.  SP4_MACH_CRED protects the gateway's identity toward
 the server and says nothing about the gateway's clients.
-<a href="#security" class="auto internal xref">Section 9</a> discusses this further.<a href="#section-5.4-9" class="pilcrow">¶</a></p>
+<a href="#security" class="auto internal xref">Section 9</a> discusses this further.<a href="#section-5.5-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="before-complete">
-<section id="section-5.5">
+<section id="section-5.6">
         <h3 id="name-operations-before-reclaim_c">
-<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-operations-before-reclaim_c" class="section-name selfRef">Operations Before RECLAIM_COMPLETE</a>
+<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-operations-before-reclaim_c" class="section-name selfRef">Operations Before RECLAIM_COMPLETE</a>
         </h3>
-<p id="section-5.5-1"><span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> requires a client with a new client
+<p id="section-5.6-1"><span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> requires a client with a new client
 ID to send a global RECLAIM_COMPLETE before its first non-reclaim
 locking operation, and a server that receives a non-reclaim
 locking operation before RECLAIM_COMPLETE returns NFS4ERR_GRACE.
 A new instance of a retaining client cannot send RECLAIM_COMPLETE
 until it knows that no more reclaims will arrive.  For a gateway,
 that is the end of its front-side grace period, which can be a
-full lease period after the gateway returns.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
-<p id="section-5.5-2">Little of what a gateway does in that interval needs a non-reclaim
+full lease period after the gateway returns.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
+<p id="section-5.6-2">Little of what a gateway does in that interval needs a non-reclaim
 locking operation.  Lock reclaims do not need a fresh open,
 because each lock is reclaimed under its reclaimed open
-(<a href="#reclaim" class="auto internal xref">Section 5.4</a>).  New locking requests from front-side clients do
+(<a href="#reclaim" class="auto internal xref">Section 5.5</a>).  New locking requests from front-side clients do
 not need one either, because the gateway's own grace period holds
 them off.  What remains is a gateway that opens a file in order to
 serve NFSv3 READ and WRITE requests, which NLM does not gate on
 recovery and which a gateway serves throughout its own grace
-period.<a href="#section-5.5-2" class="pilcrow">¶</a></p>
-<p id="section-5.5-3">For a client ID established with EXCHGID4_FLAG_RETAIN_STATE, a
+period.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
+<p id="section-5.6-3">For a client ID established with EXCHGID4_FLAG_RETAIN_STATE, a
 server <span class="bcp14">MUST</span> accept a non-reclaim OPEN before the client's
 RECLAIM_COMPLETE.  The server checks that OPEN against retained
 state as it checks any OPEN against existing state: if the
 request conflicts with a retained open's share deny mode, the
 server returns NFS4ERR_SHARE_DENIED.  A non-reclaim LOCK before
 RECLAIM_COMPLETE continues to fail with NFS4ERR_GRACE, as
-<span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> specifies.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
-<p id="section-5.5-4">This requirement differs from <span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> and
+<span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> specifies.<a href="#section-5.6-3" class="pilcrow">¶</a></p>
+<p id="section-5.6-4">This requirement differs from <span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> and
 from the corresponding statement in <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.2.1" class="relref">Section 8.4.2.1</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>.  It is part of the meaning of
 EXCHGID4_FLAG_RETAIN_STATE and is in effect only for a client ID
 established with that flag.  It does not change the behavior
@@ -1991,25 +2088,25 @@ in its own grace period, which is not the case here.  The safety
 argument is the same one, though: the server holds the complete
 retained state of the client owner, so it can determine that
 granting the OPEN cannot conflict with a reclaim that arrives
-later.<a href="#section-5.5-4" class="pilcrow">¶</a></p>
-<p id="section-5.5-5">A gateway is not obliged to use this permission.  A gateway <span class="bcp14">MAY</span>
+later.<a href="#section-5.6-4" class="pilcrow">¶</a></p>
+<p id="section-5.6-5">A gateway is not obliged to use this permission.  A gateway <span class="bcp14">MAY</span>
 instead serve NFSv3 READ and WRITE requests with a special
 stateid (<span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.2.3" class="relref">Section 8.2.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>) until it has sent
 RECLAIM_COMPLETE.  This extension does not dictate how a
-gateway's back-side client performs I/O.<a href="#section-5.5-5" class="pilcrow">¶</a></p>
+gateway's back-side client performs I/O.<a href="#section-5.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="complete">
-<section id="section-5.6">
+<section id="section-5.7">
         <h3 id="name-completing-reclaim">
-<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-completing-reclaim" class="section-name selfRef">Completing Reclaim</a>
+<a href="#section-5.7" class="section-number selfRef">5.7. </a><a href="#name-completing-reclaim" class="section-name selfRef">Completing Reclaim</a>
         </h3>
-<p id="section-5.6-1">A new instance of a retaining client signals that it has finished
+<p id="section-5.7-1">A new instance of a retaining client signals that it has finished
 reclaiming by sending RECLAIM_COMPLETE with rca_one_fs set to
 FALSE, as any client does at the end of its reclaims
 (<span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51" class="relref">Section 18.51</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>).  This extension defines no
-separate completion operation.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
-<p id="section-5.6-2">When a server receives that RECLAIM_COMPLETE from a retaining
+separate completion operation.<a href="#section-5.7-1" class="pilcrow">¶</a></p>
+<p id="section-5.7-2">When a server receives that RECLAIM_COMPLETE from a retaining
 client, it <span class="bcp14">MUST</span> release all retained state of that client owner
 that has not been reclaimed.  The release ends the reclaim
 interval.  State the instance reclaimed before sending
@@ -2017,47 +2114,47 @@ RECLAIM_COMPLETE is unaffected: it is ordinary state of a live
 client and remains so.  Retained state released here is state
 whose lease expired without being reclaimed, so this is the point
 at which the server makes the stable-storage record that
-<a href="#retain" class="auto internal xref">Section 5.2</a> defers from lease expiry.<a href="#section-5.6-2" class="pilcrow">¶</a></p>
-<p id="section-5.6-3">A RECLAIM_COMPLETE with rca_one_fs set to TRUE pertains to a file
-system transition and has no effect on retained state.<a href="#section-5.6-3" class="pilcrow">¶</a></p>
-<p id="section-5.6-4">Once released, retained state cannot be reclaimed.  A reclaim-type
+<a href="#retain" class="auto internal xref">Section 5.2</a> defers from lease expiry.<a href="#section-5.7-2" class="pilcrow">¶</a></p>
+<p id="section-5.7-3">A RECLAIM_COMPLETE with rca_one_fs set to TRUE pertains to a file
+system transition and has no effect on retained state.<a href="#section-5.7-3" class="pilcrow">¶</a></p>
+<p id="section-5.7-4">Once released, retained state cannot be reclaimed.  A reclaim-type
 request that arrives after RECLAIM_COMPLETE finds no retained
 state for the client owner and receives NFS4ERR_NO_GRACE, as
-<a href="#reclaim" class="auto internal xref">Section 5.4</a> specifies.  A gateway whose front-side grace period
+<a href="#reclaim" class="auto internal xref">Section 5.5</a> specifies.  A gateway whose front-side grace period
 has ended has nothing further to forward, so this case arises only
 from a reclaim that a front-side client sends late, and the
-gateway refuses it as <a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a> describes.<a href="#section-5.6-4" class="pilcrow">¶</a></p>
-<p id="section-5.6-5">RECLAIM_COMPLETE from any instance of the client owner releases
+gateway refuses it as <a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a> describes.<a href="#section-5.7-4" class="pilcrow">¶</a></p>
+<p id="section-5.7-5">RECLAIM_COMPLETE from any instance of the client owner releases
 everything retained and not yet reclaimed, including the remainder
 from an earlier instance that restarted before sending its own
 RECLAIM_COMPLETE.  <a href="#retain" class="auto internal xref">Section 5.2</a> describes how retained state
 accumulates across repeated restarts and how the reclaim cap
-bounds each part of it.<a href="#section-5.6-5" class="pilcrow">¶</a></p>
-<p id="section-5.6-6">A new instance that learns from the EXCHANGE_ID reply that no
+bounds each part of it.<a href="#section-5.7-5" class="pilcrow">¶</a></p>
+<p id="section-5.7-6">A new instance that learns from the EXCHANGE_ID reply that no
 reclaim can succeed, because EXCHGID4_FLAG_RECLAIMABLE_R is
-clear, sends RECLAIM_COMPLETE at once, as <span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> requires of a client that has nothing to reclaim.<a href="#section-5.6-6" class="pilcrow">¶</a></p>
+clear, sends RECLAIM_COMPLETE at once, as <span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> requires of a client that has nothing to reclaim.<a href="#section-5.7-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="errors">
-<section id="section-5.7">
+<section id="section-5.8">
         <h3 id="name-errors">
-<a href="#section-5.7" class="section-number selfRef">5.7. </a><a href="#name-errors" class="section-name selfRef">Errors</a>
+<a href="#section-5.8" class="section-number selfRef">5.8. </a><a href="#name-errors" class="section-name selfRef">Errors</a>
         </h3>
-<p id="section-5.7-1">This extension defines no new error codes.  The following existing
+<p id="section-5.8-1">This extension defines no new error codes.  The following existing
 codes of <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> are returned in circumstances that this
 extension introduces.  Each is specified in the subsection that
-describes the circumstance; this list collects them.<a href="#section-5.7-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-5.7-2">
-          <dt id="section-5.7-2.1">NFS4ERR_INVAL:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.7-2.2">
-            <p id="section-5.7-2.2.1">Returned by a server that does not implement this extension to
+describes the circumstance; this list collects them.<a href="#section-5.8-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.8-2">
+          <dt id="section-5.8-2.1">NFS4ERR_INVAL:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.8-2.2">
+            <p id="section-5.8-2.2.1">Returned by a server that does not implement this extension to
 an EXCHANGE_ID that sets EXCHGID4_FLAG_RETAIN_STATE
-(<a href="#negotiate" class="auto internal xref">Section 5.1</a>).<a href="#section-5.7-2.2.1" class="pilcrow">¶</a></p>
+(<a href="#negotiate" class="auto internal xref">Section 5.1</a>).<a href="#section-5.8-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.7-2.3">NFS4ERR_SHARE_DENIED, NFS4ERR_DENIED:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.7-2.4">
-            <p id="section-5.7-2.4.1">Returned to a request from any client that conflicts with a
+<dt id="section-5.8-2.3">NFS4ERR_SHARE_DENIED, NFS4ERR_DENIED:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.8-2.4">
+            <p id="section-5.8-2.4.1">Returned to a request from any client that conflicts with a
 retained open or a retained byte-range lock, respectively, while
 the retained state is enforced (<a href="#retain" class="auto internal xref">Section 5.2</a>).  These are the
 same results the requester would see had the retaining client
@@ -2065,57 +2162,57 @@ not restarted, and they are returned in place of the yield to a
 conflicting request that <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.3" class="relref">Section 8.4.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> otherwise
 requires of expired state.  NFS4ERR_SHARE_DENIED is also
 returned to a non-reclaim OPEN from the new instance itself when
-that OPEN conflicts with retained state (<a href="#before-complete" class="auto internal xref">Section 5.5</a>).<a href="#section-5.7-2.4.1" class="pilcrow">¶</a></p>
+that OPEN conflicts with retained state (<a href="#before-complete" class="auto internal xref">Section 5.6</a>).<a href="#section-5.8-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.7-2.5">NFS4ERR_GRACE:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.7-2.6">
-            <p id="section-5.7-2.6.1">Returned to a non-reclaim LOCK from a new instance before it
+<dt id="section-5.8-2.5">NFS4ERR_GRACE:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.8-2.6">
+            <p id="section-5.8-2.6.1">Returned to a non-reclaim LOCK from a new instance before it
 sends RECLAIM_COMPLETE, unchanged from <span><a href="https://rfc-editor.org/rfc/rfc8881#section-18.51.3" class="relref">Section 18.51.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>.  Not returned to a non-reclaim OPEN from a retaining
-client in that interval (<a href="#before-complete" class="auto internal xref">Section 5.5</a>), and not returned
+client in that interval (<a href="#before-complete" class="auto internal xref">Section 5.6</a>), and not returned
 to another client whose request conflicts with retained state
-(<a href="#retain" class="auto internal xref">Section 5.2</a>).<a href="#section-5.7-2.6.1" class="pilcrow">¶</a></p>
+(<a href="#retain" class="auto internal xref">Section 5.2</a>).<a href="#section-5.8-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.7-2.7">NFS4ERR_RECLAIM_BAD:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.7-2.8">
-            <p id="section-5.7-2.8.1">Returned to a reclaim-type request from a client owner for which
+<dt id="section-5.8-2.7">NFS4ERR_RECLAIM_BAD:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.8-2.8">
+            <p id="section-5.8-2.8.1">Returned to a reclaim-type request from a client owner for which
 the server holds retained state when no retained state matches
-the request (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).<a href="#section-5.7-2.8.1" class="pilcrow">¶</a></p>
+the request (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).<a href="#section-5.8-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.7-2.9">NFS4ERR_NO_GRACE:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.7-2.10">
-            <p id="section-5.7-2.10.1">Returned to a reclaim-type request when the server is not in its
+<dt id="section-5.8-2.9">NFS4ERR_NO_GRACE:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.8-2.10">
+            <p id="section-5.8-2.10.1">Returned to a reclaim-type request when the server is not in its
 grace period and holds no retained state for the client owner,
 whether because the state was never retained, was released at a
 limit or by administrative action, or was released by an earlier
-RECLAIM_COMPLETE (<a href="#reclaim" class="auto internal xref">Section 5.4</a>, <a href="#complete" class="auto internal xref">Section 5.6</a>).<a href="#section-5.7-2.10.1" class="pilcrow">¶</a></p>
+RECLAIM_COMPLETE (<a href="#reclaim" class="auto internal xref">Section 5.5</a>, <a href="#complete" class="auto internal xref">Section 5.7</a>).<a href="#section-5.8-2.10.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-5.7-3">A server does not return NFS4ERR_RECLAIM_CONFLICT on account of
+<p id="section-5.8-3">A server does not return NFS4ERR_RECLAIM_CONFLICT on account of
 retained state.  State revoked for a conflicting request after a
 limit is no longer retained, and a reclaim for it receives
 NFS4ERR_RECLAIM_BAD or NFS4ERR_NO_GRACE as above.  To return
 NFS4ERR_RECLAIM_CONFLICT instead, the server would have to
-remember what it had revoked (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).<a href="#section-5.7-3" class="pilcrow">¶</a></p>
+remember what it had revoked (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).<a href="#section-5.8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="grace">
-<section id="section-5.8">
+<section id="section-5.9">
         <h3 id="name-interaction-with-the-server">
-<a href="#section-5.8" class="section-number selfRef">5.8. </a><a href="#name-interaction-with-the-server" class="section-name selfRef">Interaction with the Server's Grace Period</a>
+<a href="#section-5.9" class="section-number selfRef">5.9. </a><a href="#name-interaction-with-the-server" class="section-name selfRef">Interaction with the Server's Grace Period</a>
         </h3>
-<p id="section-5.8-1">Retention operates while the server is running normally.  This
+<p id="section-5.9-1">Retention operates while the server is running normally.  This
 subsection specifies what happens when the server itself restarts
 while it holds retained state, or while a new instance of a
-retaining client is reclaiming.<a href="#section-5.8-1" class="pilcrow">¶</a></p>
-<p id="section-5.8-2">A server is not required to preserve retained state across a
+retaining client is reclaiming.<a href="#section-5.9-1" class="pilcrow">¶</a></p>
+<p id="section-5.9-2">A server is not required to preserve retained state across a
 restart of the server.  Where it does not, a server restart
 converts the situation into one that <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.2" class="relref">Section 8.4.2</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span>
-already covers, as follows.<a href="#section-5.8-2" class="pilcrow">¶</a></p>
-<p id="section-5.8-3">If the server restarts during an absence interval, the retaining
+already covers, as follows.<a href="#section-5.9-2" class="pilcrow">¶</a></p>
+<p id="section-5.9-3">If the server restarts during an absence interval, the retaining
 client has not yet returned.  When it does, the server is in its
 grace period or has left it, and the state of the retaining
 client is gone.  The new instance sends EXCHANGE_ID with
@@ -2124,17 +2221,17 @@ grace period and its stable storage lists the client owner as
 permitted to reclaim, the server sets
 EXCHGID4_FLAG_RECLAIMABLE_R, and the client's reclaims are
 ordinary grace-period reclaims, which is the first case in the
-order of <a href="#reclaim" class="auto internal xref">Section 5.4</a>.  If the server's grace period has ended,
-the flag is clear and the client has nothing to reclaim.<a href="#section-5.8-3" class="pilcrow">¶</a></p>
-<p id="section-5.8-4">If the server restarts during a reclaim interval, the new instance
+order of <a href="#reclaim" class="auto internal xref">Section 5.5</a>.  If the server's grace period has ended,
+the flag is clear and the client has nothing to reclaim.<a href="#section-5.9-3" class="pilcrow">¶</a></p>
+<p id="section-5.9-4">If the server restarts during a reclaim interval, the new instance
 of the retaining client has not restarted again.  It observes the
 server restart as any client does, establishes a new client ID,
 and reclaims during the server's grace period the state it had
 already recovered.  Reclaims it has not yet made become ordinary
 grace-period reclaims.  It sends RECLAIM_COMPLETE when it has
 finished, which for a gateway is when its front-side grace period
-ends.<a href="#section-5.8-4" class="pilcrow">¶</a></p>
-<p id="section-5.8-5">The point at which a server records a retaining client's lease
+ends.<a href="#section-5.9-4" class="pilcrow">¶</a></p>
+<p id="section-5.9-5">The point at which a server records a retaining client's lease
 expiry in stable storage, specified in <a href="#retain" class="auto internal xref">Section 5.2</a>, matters here.
 <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.3" class="relref">Section 8.4.3</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> has a server make that record so
 that, after a server restart, a reclaim from a client whose lease
@@ -2145,8 +2242,8 @@ restarted had no such lease expiry, since nothing conflicting was
 granted, and the server has made no record.  A retaining client
 therefore remains eligible to reclaim across a server restart for
 the whole of an absence interval, although its lease expired
-during that interval.<a href="#section-5.8-5" class="pilcrow">¶</a></p>
-<p id="section-5.8-6">RFC 8881 does not promise that a server's grace period outlasts a
+during that interval.<a href="#section-5.9-5" class="pilcrow">¶</a></p>
+<p id="section-5.9-6">RFC 8881 does not promise that a server's grace period outlasts a
 gateway's.  <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.2.1" class="relref">Section 8.4.2.1</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> says that "the server
 may also terminate the grace period before all clients have done
 a global RECLAIM_COMPLETE".  A gateway that returns after the
@@ -2159,8 +2256,8 @@ client owner has sent
 RECLAIM_COMPLETE, bounded by the absence limit while the client
 has not returned and by the reclaim cap once it has.
 <span><a href="https://rfc-editor.org/rfc/rfc8881#section-8.4.2.1" class="relref">Section 8.4.2.1</a> of [<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> already permits a grace period
-that lasts until every known client has completed its reclaims.<a href="#section-5.8-6" class="pilcrow">¶</a></p>
-<p id="section-5.8-7">These are recommendations rather than requirements because holding
+that lasts until every known client has completed its reclaims.<a href="#section-5.9-6" class="pilcrow">¶</a></p>
+<p id="section-5.9-7">These are recommendations rather than requirements because holding
 the grace period open delays every client of the server, by up to
 the absence limit when the retaining client never returns.  A
 server operator has to be able to decline that cost.  What the
@@ -2171,7 +2268,7 @@ ends its grace period early causes a front-side client to be told
 that its state is lost, and never causes state to be re-granted
 without protection.  Continuity across a restart of both the
 gateway and the server is therefore best effort, and safety is
-not.<a href="#section-5.8-7" class="pilcrow">¶</a></p>
+not.<a href="#section-5.9-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2235,7 +2332,7 @@ to know which mode the gateway runs.<a href="#section-6.1-5" class="pilcrow">¶<
 gateway.  A gateway that was local-only before a restart and
 pass-through after it would send a reclaim OPEN with deny bits
 that the retained open lacks, and the backend would answer
-NFS4ERR_RECLAIM_BAD (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).  The mode is therefore
+NFS4ERR_RECLAIM_BAD (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).  The mode is therefore
 persistent configuration (<a href="#stable" class="auto internal xref">Section 6.3</a>).  A gateway whose mode has
 nonetheless changed retries the reclaim without deny bits and
 treats the result as local-only.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
@@ -2259,7 +2356,7 @@ delegation are a second case of state with no derived counterpart.
         <h3 id="name-owner-derivation">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-owner-derivation" class="section-name selfRef">Owner Derivation</a>
         </h3>
-<p id="section-6.2-1">The matching rule in <a href="#reclaim" class="auto internal xref">Section 5.4</a> requires the new instance of a
+<p id="section-6.2-1">The matching rule in <a href="#reclaim" class="auto internal xref">Section 5.5</a> requires the new instance of a
 gateway to present the same open-owner and lock-owner strings that
 the prior instance used.  The gateway has no record of those
 strings after a restart other than what it can reconstruct from
@@ -2353,32 +2450,48 @@ or source address of each NLM caller (<a href="#owners" class="auto internal xre
 to the backend, then CREATE_SESSION.<a href="#section-6.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.4-2.2">
-            <p id="section-6.4-2.2.1">The gateway begins its front-side grace period and notifies
-its front-side clients: SM_NOTIFY to the callers in its NSM
-monitor list, and the ordinary NFSv4 restart indications to its
-NFSv4 clients.<a href="#section-6.4-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-6.4-2.2.1">The gateway reads retain_absence_limit and retain_reclaim_cap
+from the backend (<a href="#attrs" class="auto internal xref">Section 5.4</a>).<a href="#section-6.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.4-2.3">
-            <p id="section-6.4-2.3.1">The gateway forwards each front-side reclaim to the backend as
-a back-side reclaim and answers the front-side client from the
-backend's reply.<a href="#section-6.4-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.4-2.3.1">The gateway begins its front-side grace period and notifies
+its front-side clients: SM_NOTIFY to the callers in its NSM
+monitor list, and the ordinary NFSv4 restart indications to its
+NFSv4 clients.<a href="#section-6.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.4-2.4">
-            <p id="section-6.4-2.4.1">When the front-side grace period ends, the gateway sends
-RECLAIM_COMPLETE to the backend.<a href="#section-6.4-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-6.4-2.4.1">The gateway forwards each front-side reclaim to the backend as
+a back-side reclaim and answers the front-side client from the
+backend's reply.<a href="#section-6.4-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-6.4-2.5">
+            <p id="section-6.4-2.5.1">When the front-side grace period ends, the gateway sends
+RECLAIM_COMPLETE to the backend.<a href="#section-6.4-2.5.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-6.4-3">The gateway decides once, from the EXCHANGE_ID reply, whether
-reclaims can succeed, and then the backend decides each reclaim.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
-<p id="section-6.4-4">If the reply carries EXCHGID4_FLAG_RECLAIMABLE_R, the gateway runs
+<p id="section-6.4-3">The reclaim cap runs from the gateway's CREATE_SESSION.  A gateway
+<span class="bcp14">SHOULD</span> choose a front-side grace period that ends, with time left
+to send RECLAIM_COMPLETE, before the reclaim cap elapses.  The
+front side sets a floor on that choice.  NFSv4 front-side clients
+need at least one lease period of the gateway in which to notice
+the restart and reclaim, and NLM clients need time to act on
+SM_NOTIFY.  When the reclaim cap is shorter than that floor, the
+gateway runs the grace period its front side needs, and reclaims
+that arrive after the cap are refused as <a href="#reclaim" class="auto internal xref">Section 5.5</a> specifies.
+A gateway <span class="bcp14">SHOULD</span> report that condition to its operator when it
+starts, because the condition is a configuration error that the
+operator can correct at the gateway or at the backend.<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+<p id="section-6.4-4">The gateway decides once, from the EXCHANGE_ID reply, whether
+reclaims can succeed, and then the backend decides each reclaim.<a href="#section-6.4-4" class="pilcrow">¶</a></p>
+<p id="section-6.4-5">If the reply carries EXCHGID4_FLAG_RECLAIMABLE_R, the gateway runs
 the sequence above in full.  The gateway <span class="bcp14">MUST</span> grant a front-side
 reclaim only if the corresponding back-side reclaim succeeded, and
 <span class="bcp14">MUST</span> refuse a front-side reclaim whose back-side reclaim failed.
 The gateway does not need to know whether the backend answered
 from retained state or from its own grace period, because the
-requests are the same in both cases (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).  The gateway
-withholds RECLAIM_COMPLETE until its front-side grace period ends.<a href="#section-6.4-4" class="pilcrow">¶</a></p>
-<p id="section-6.4-5">If the reply does not carry EXCHGID4_FLAG_RECLAIMABLE_R, the
+requests are the same in both cases (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).  The gateway
+withholds RECLAIM_COMPLETE until its front-side grace period ends.<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+<p id="section-6.4-6">If the reply does not carry EXCHGID4_FLAG_RECLAIMABLE_R, the
 gateway still notifies its front-side clients, sends
 RECLAIM_COMPLETE at once, and refuses every front-side reclaim.
 This covers a return after the retained state was released, and a
@@ -2387,7 +2500,7 @@ has no record of this client owner.  A gateway treats a backend
 that does not implement the extension, detected by NFS4ERR_INVAL
 and the retry without the flag, or that declines retention, in the
 same way.  The gateway notifies in every case because a refused
-reclaim is the only way an NLM client learns that a lock is gone.<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+reclaim is the only way an NLM client learns that a lock is gone.<a href="#section-6.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="gateway-nfsv3">
@@ -2410,7 +2523,7 @@ tables during its grace period.<a href="#section-6.5-2" class="pilcrow">¶</a></
 <p id="section-6.5-3">NLM does not gate READ and WRITE on recovery, so NFSv3 I/O
 continues to arrive during the gateway's grace period.  The
 gateway serves it either by opening the file on the backend with
-a non-reclaim OPEN, which <a href="#before-complete" class="auto internal xref">Section 5.5</a> permits before
+a non-reclaim OPEN, which <a href="#before-complete" class="auto internal xref">Section 5.6</a> permits before
 RECLAIM_COMPLETE, or with a special stateid.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2507,7 +2620,7 @@ period ends while the gateway is still forwarding reclaims, the
 remaining back-side reclaims fail with NFS4ERR_NO_GRACE and the
 gateway refuses the corresponding front-side reclaims.
 Continuity in this case therefore depends on the backend's grace
-period outlasting the gateway's, which <a href="#grace" class="auto internal xref">Section 5.8</a> recommends but
+period outlasting the gateway's, which <a href="#grace" class="auto internal xref">Section 5.9</a> recommends but
 <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> does not promise.  The safety rule of
 <a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a> holds regardless: nothing is re-granted on the
 front side without a successful back-side reclaim.<a href="#section-6.7-2" class="pilcrow">¶</a></p>
@@ -2546,6 +2659,93 @@ reclaiming.  This is a limitation of NLM, which this document
 records and does not fix.<a href="#section-6.8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="chained">
+<section id="section-6.9">
+        <h3 id="name-chained-gateways">
+<a href="#section-6.9" class="section-number selfRef">6.9. </a><a href="#name-chained-gateways" class="section-name selfRef">Chained Gateways</a>
+        </h3>
+<p id="section-6.9-1">This subsection is not normative.  It describes how the mechanism
+behaves when a gateway's backend is itself a gateway, a
+configuration this document does not otherwise specify.<a href="#section-6.9-1" class="pilcrow">¶</a></p>
+<p id="section-6.9-2">In a chain of two gateways, the outer gateway serves the
+front-side clients and mounts the inner gateway, and the inner
+gateway mounts the backend.  Both mounts use NFSv4.2.  The inner
+gateway takes both roles this document defines.  Toward the
+backend it is a retaining client.  Toward the outer gateway it is
+a server that implements the extension, and the outer gateway is
+its retaining client.  No protocol element beyond those in
+<a href="#extension" class="auto internal xref">Section 5</a> is involved.<a href="#section-6.9-2" class="pilcrow">¶</a></p>
+<p id="section-6.9-3">The safety rule of <a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a> applies at each gateway
+separately.  The outer gateway grants a front-side reclaim only if
+the inner gateway granted the corresponding reclaim, and the inner
+gateway grants that reclaim only if the backend did.  A front-side
+reclaim therefore succeeds only if the backend's protection for
+the state was continuous, however many gateways the chain has.
+What the chain puts at risk is continuity, and the cases below
+differ in how much of it survives.<a href="#section-6.9-3" class="pilcrow">¶</a></p>
+<p id="section-6.9-4">When the outer gateway restarts alone, the inner gateway retains
+the outer gateway's state by continuing to hold the derived state
+on the backend.  The inner gateway's lease on the backend never
+lapses, so the backend observes nothing and the backend's limits
+do not come into play.  The inner gateway's absence limit and
+reclaim cap are the only bounds on how long that state blocks
+other clients of the backend.<a href="#section-6.9-4" class="pilcrow">¶</a></p>
+<p id="section-6.9-5">When the inner gateway restarts alone, the outer gateway sees an
+ordinary restart of its backend and behaves as
+<a href="#gateway-backend-restart" class="auto internal xref">Section 6.7</a> describes.  It reclaims the derived
+state it holds in memory during the inner gateway's grace period
+and does not notify its front-side clients.  The inner gateway
+forwards each of those reclaims to the backend, which answers from
+retained state.<a href="#section-6.9-5" class="pilcrow">¶</a></p>
+<p id="section-6.9-6">When both gateways restart, the reclaim intervals nest.  The outer
+gateway withholds RECLAIM_COMPLETE from the inner gateway until
+the outer gateway's front-side grace period ends.  The inner
+gateway's grace period has to stay open until then, and the inner
+gateway withholds RECLAIM_COMPLETE from the backend for as long as
+its grace period is open.  The backend's reclaim cap therefore has
+to cover the inner gateway's grace period, which in turn has to
+cover the time the outer gateway takes to restart plus the outer
+gateway's grace period.  Each further gateway in a chain adds its
+own restart time and grace period to what the backend's reclaim
+cap has to cover.  Each gateway can read the limits of the server
+behind it (<a href="#attrs" class="auto internal xref">Section 5.4</a>).  An inner gateway can therefore report to
+the outer gateway limits that fit inside the ones the backend
+reported to it, and the outer gateway sizes its front-side grace
+period from those.  Where the limits do not nest, the
+reclaims still outstanding when the shorter limit is reached fail,
+and the front-side clients that sent them are told that their
+state is lost.<a href="#section-6.9-6" class="pilcrow">¶</a></p>
+<p id="section-6.9-7">The recommendations in <a href="#grace" class="auto internal xref">Section 5.9</a> carry more weight for an inner
+gateway than for a backend.  If the inner gateway restarts while
+the outer gateway is absent, and the inner gateway does not hold
+its grace period open for the outer gateway, the grace period ends
+with no reclaim received.  The inner gateway then sends
+RECLAIM_COMPLETE, and the backend releases all of the state.  An
+inner gateway that records the outer gateway as a retaining client
+and holds its grace period open avoids that outcome.  How long it
+can wait is bounded by its own absence limit and, because it is
+withholding RECLAIM_COMPLETE from the backend throughout, by the
+backend's reclaim cap.<a href="#section-6.9-7" class="pilcrow">¶</a></p>
+<p id="section-6.9-8">An inner gateway that has itself restarted can set
+EXCHGID4_FLAG_RECLAIMABLE_R in its reply to the outer gateway only
+if the backend set the flag in its reply to the inner gateway.
+Otherwise the outer gateway would run a front-side grace period in
+which every reclaim is refused.<a href="#section-6.9-8" class="pilcrow">¶</a></p>
+<p id="section-6.9-9">Share deny modes are protected against direct clients only if
+every gateway in the chain runs in pass-through mode
+(<a href="#recoverable" class="auto internal xref">Section 6.1</a>).  A single local-only gateway drops the deny
+bits at that point in the chain, and the backend never sees them.
+Owner derivation needs nothing further.  The inner gateway derives
+its back-side owners from the outer gateway's client owner string
+and from the owners the outer gateway derived (<a href="#owners" class="auto internal xref">Section 6.2</a>), so
+each front-side owner still maps to one owner at the backend, and
+the mapping is the same after any restart.<a href="#section-6.9-9" class="pilcrow">¶</a></p>
+<p id="section-6.9-10">The inner gateway does not grant delegations to the outer gateway
+(<a href="#gateway-nfsv4" class="auto internal xref">Section 6.6</a>).  The outer gateway therefore holds no
+back-side delegations, and it gives up the caching that such
+delegations would have allowed.<a href="#section-6.9-10" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="backend">
@@ -2573,10 +2773,11 @@ least one lease period of the gateway, and a cap shorter than
 that causes late front-side reclaims to be refused and their
 clients told that state is lost.  A server <span class="bcp14">SHOULD</span> make the reclaim
 cap configurable, and its default <span class="bcp14">SHOULD</span> be no shorter than the
-server's own lease period.  Because neither limit is advertised
-(<a href="#limits" class="auto internal xref">Section 5.3</a>), an operator who runs a gateway against a server
-sets the gateway's front-side grace period with the server's
-reclaim cap in mind.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+server's own lease period.  A gateway reads the reclaim cap and
+fits its front-side grace period inside it where it can
+(<a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a>), but a gateway cannot shorten that grace
+period below what its front side needs.  The default therefore
+has to suit a gateway that nobody has tuned.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="resources">
@@ -2590,7 +2791,7 @@ of state it retains, per retaining client or in total.  When a
 server declines to retain state because of a resource limit, it
 releases that state as it would for a client that was not a
 retaining client, and a later reclaim for it receives
-NFS4ERR_RECLAIM_BAD or NFS4ERR_NO_GRACE (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).  A server
+NFS4ERR_RECLAIM_BAD or NFS4ERR_NO_GRACE (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).  A server
 that cannot retain the state of a client owner at all <span class="bcp14">SHOULD</span>
 decline retention at EXCHANGE_ID (<a href="#negotiate" class="auto internal xref">Section 5.1</a>) rather than
 accept and then release.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
@@ -2634,7 +2835,7 @@ because from that moment another client may hold a conflicting
 lock, which is the condition the record exists to capture.  A
 server for which that bookkeeping is impractical releases retained
 state outright when a limit is reached, which <a href="#limits" class="auto internal xref">Section 5.3</a> permits.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<p id="section-7.4-2">A server that follows the recommendation of <a href="#grace" class="auto internal xref">Section 5.8</a> also records
+<p id="section-7.4-2">A server that follows the recommendation of <a href="#grace" class="auto internal xref">Section 5.9</a> also records
 that a client owner is a retaining client, so that after a server
 restart it can hold its grace period open for that client owner.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
@@ -2681,9 +2882,9 @@ service.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
       <h2 id="name-xdr-description">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-xdr-description" class="section-name selfRef">XDR Description</a>
       </h2>
-<p id="section-8-1">This extension adds two constants to the XDR description of
-NFSv4.2 in <span>[<a href="#RFC7863" class="cite xref">RFC7863</a>]</span>.  No new data types or operations are
-added, and the XDR of EXCHANGE_ID is unchanged: the new constants
+<p id="section-8-1">This extension adds two flag constants and two attributes to the
+XDR description of NFSv4.2 in <span>[<a href="#RFC7863" class="cite xref">RFC7863</a>]</span>.  No operations are
+added, and the XDR of EXCHANGE_ID is unchanged: the flag constants
 name bits in the existing eia_flags and eir_flags words.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8-2">
 <pre>
@@ -2696,6 +2897,16 @@ name bits in the existing eia_flags and eir_flags words.<a href="#section-8-1" c
 /// const EXCHGID4_FLAG_RETAIN_STATE        = 0x00000008;
 /// const EXCHGID4_FLAG_RECLAIMABLE_R       = 0x20000000;
 ///
+/// /*
+///  * Attributes defined by this document.  Each value is a
+///  * count of seconds.
+///  */
+/// typedef uint32_t        fattr4_retain_absence_limit;
+/// typedef uint32_t        fattr4_retain_reclaim_cap;
+///
+/// const FATTR4_RETAIN_ABSENCE_LIMIT       = 92;
+/// const FATTR4_RETAIN_RECLAIM_CAP         = 93;
+///
 </pre><a href="#section-8-2" class="pilcrow">¶</a>
 </div>
 <p id="section-8-3">EXCHGID4_FLAG_RETAIN_STATE takes the next unassigned bit after the
@@ -2704,6 +2915,10 @@ resembles in being set by the client and echoed by the server.
 EXCHGID4_FLAG_RECLAIMABLE_R takes a bit adjacent to
 EXCHGID4_FLAG_CONFIRMED_R, which it resembles in being set only
 by the server.  <a href="#negotiate" class="auto internal xref">Section 5.1</a> specifies the use of both.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-4"><a href="#attrs" class="auto internal xref">Section 5.4</a> specifies the two attributes.  Their numbers are
+provisional.  Other extensions to NFSv4.2 that are in progress
+also assign attribute numbers, and the numbers here will change
+if they collide with an assignment that is published first.<a href="#section-8-4" class="pilcrow">¶</a></p>
 <div id="extract">
 <section id="section-8.1">
         <h3 id="name-extraction-of-xdr">
@@ -2714,7 +2929,7 @@ makes it simple for the reader to extract into a ready-to-compile
 form, following the practice of <span>[<a href="#RFC7863" class="cite xref">RFC7863</a>]</span> and <span>[<a href="#RFC9754" class="cite xref">RFC9754</a>]</span>.  The
 reader can feed this document into the following shell script to
 produce the machine-readable XDR description of the new
-constants:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+constants and types:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.1-2">
 <pre>
 #!/bin/sh
@@ -2731,9 +2946,9 @@ sh extract.sh &lt; spec.txt &gt; state_retention_prot.x
 </div>
 <p id="section-8.1-5">The effect of the script is to remove leading blank space from
 each line, plus a sentinel sequence of "///".  The extracted
-constants are written in the XDR language of <span>[<a href="#RFC4506" class="cite xref">RFC4506</a>]</span> and
-belong with the EXCHANGE_ID constants in the nfs4_prot.x file
-generated from <span>[<a href="#RFC7863" class="cite xref">RFC7863</a>]</span>.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+definitions are written in the XDR language of <span>[<a href="#RFC4506" class="cite xref">RFC4506</a>]</span> and
+belong with the EXCHANGE_ID constants and the attribute
+definitions in the nfs4_prot.x file generated from <span>[<a href="#RFC7863" class="cite xref">RFC7863</a>]</span>.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2781,7 +2996,7 @@ too long to wait.<a href="#section-9.1-2" class="pilcrow">¶</a></p>
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-reclaiming-state-the-prior-" class="section-name selfRef">Reclaiming State the Prior Instance Did Not Hold</a>
         </h3>
 <p id="section-9.2-1">A reclaim succeeds only when it matches retained state of the same
-client owner under the same owner string (<a href="#reclaim" class="auto internal xref">Section 5.4</a>).  A new
+client owner under the same owner string (<a href="#reclaim" class="auto internal xref">Section 5.5</a>).  A new
 instance of a retaining client therefore cannot recover state that
 the prior instance did not hold, and no client can recover another
 client owner's retained state.  SP4_MACH_CRED, where required,
@@ -2846,7 +3061,7 @@ application might then act on data that another client changed in
 the interim.  <a href="#gateway-reclaim" class="auto internal xref">Section 6.4</a> forbids this: a gateway <span class="bcp14">MUST</span>
 grant a front-side reclaim only when the corresponding back-side
 reclaim succeeded.  The same rule protects against a server that
-ended its grace period early (<a href="#grace" class="auto internal xref">Section 5.8</a>) and against retained
+ended its grace period early (<a href="#grace" class="auto internal xref">Section 5.9</a>) and against retained
 state released at a limit: in each case the application learns
 that its state was lost rather than proceeding on a false
 assumption.  Local-only deny modes (<a href="#recoverable" class="auto internal xref">Section 6.1</a>) are the one
@@ -2880,7 +3095,11 @@ the transport beyond those of <span>[<a href="#RFC8881" class="cite xref">RFC888
 <p id="section-10-2">The two EXCHANGE_ID flag bits that <a href="#xdr" class="auto internal xref">Section 8</a> assigns are not
 managed by an IANA registry.  <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> assigns the existing
 flag bits in its XDR description, and <span>[<a href="#RFC7862" class="cite xref">RFC7862</a>]</span> added one in the
-same way.  This document follows that practice.<a href="#section-10-2" class="pilcrow">¶</a></p>
+same way.  The two attribute numbers that <a href="#xdr" class="auto internal xref">Section 8</a> assigns are not
+managed by an IANA registry either.  <span>[<a href="#RFC8881" class="cite xref">RFC8881</a>]</span> and <span>[<a href="#RFC7862" class="cite xref">RFC7862</a>]</span>
+assign attribute numbers in their XDR descriptions, and
+<span>[<a href="#RFC9754" class="cite xref">RFC9754</a>]</span> added attributes in the same way.  This document
+follows that practice.<a href="#section-10-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -3014,7 +3233,9 @@ sessions, and keeps the old instance's opens and locks as
 retained state.<a href="#appendix-A.1-7.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-7.3">
-            <p id="appendix-A.1-7.3.1">G starts its front-side grace period and sends SM_NOTIFY to C.<a href="#appendix-A.1-7.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-A.1-7.3.1">G reads retain_reclaim_cap from B and chooses a front-side
+grace period that ends before the cap elapses from step 8.  G
+starts that grace period and sends SM_NOTIFY to C.<a href="#appendix-A.1-7.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="appendix-A.1-7.4">
             <p id="appendix-A.1-7.4.1">C sends NLM_LOCK with the reclaim flag set, for the same owner
