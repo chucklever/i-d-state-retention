@@ -3,9 +3,9 @@
 
 
 Network File System Version 4                                   C. Lever
-Internet-Draft                                            5 October 2026
+Internet-Draft                                            9 October 2026
 Intended status: Standards Track                                        
-Expires: 8 April 2027
+Expires: 12 April 2027
 
 
            State Retention Across Client Restart for NFSv4.2
@@ -55,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 April 2027.
+   This Internet-Draft will expire on 12 April 2027.
 
 Copyright Notice
 
@@ -1821,8 +1821,8 @@ Acknowledgments
    responsible for its content.  Claude is not an author of this
    document.
 
-   The editor is grateful to Bill Baker, Greg Marsden, and Martin
-   Thomson for their input and support.
+   The editor is grateful to Bill Baker, Greg Marsden, Tom Talpey, and
+   Martin Thomson for their input and support.
 
    Special thanks to Area Director Gorry Fairhurst, NFSv4 Working Group
    Chair Brian Pawlowski, and NFSv4 Working Group Secretary Thomas
